@@ -1,0 +1,32 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "AllowedHosts": "*",
+  "ReverseProxy": {
+    "Routes": {
+      "WebApiRoute": {
+        "ClusterId": "WebApiCluster",
+        "Match": {
+          "Path": "/api/{**catch-all}"
+        },
+        "Transforms": [
+          { "PathRemovePrefix": "/api" }
+        ]
+      }
+    },
+    "Clusters": {
+      "WebApiCluster": {
+        "Destinations": {
+          "WebApiClusterDestination01": {
+            "Address": "http://webapi:8080"
+          }
+        }
+      }
+    }
+  }
+}

@@ -24,6 +24,17 @@ services:
     ports:
       - "8080:8080"
       - "8081:8081"
+    
+  yarp:
+    image: mcr.microsoft.com/dotnet/nightly/yarp:2.3-preview
+    container_name: Yarp
+    depends_on:
+      - webapi
+    volumes:
+      - ${PWD}/Proxy/yarp.json:/etc/yarp.config
+    ports:
+      - "5000:5000"
 
 volumes:
   mysql:
+    name: MySql
