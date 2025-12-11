@@ -22,9 +22,6 @@ public class LehrerRepository
     
     public async Task<Lehrer?> LadeLehrerAnBenutzernameAsync(string benutzername)
     {
-        return await _context.Lehrer
-            .Include(l => l.Faecher)
-            .ThenInclude(f => f.Klassen)
-            .FirstOrDefaultAsync(l => l.Benutzername == benutzername);
+        return await _context.Lehrer.FirstOrDefaultAsync(l => l.Benutzername == benutzername);
     }
 }
