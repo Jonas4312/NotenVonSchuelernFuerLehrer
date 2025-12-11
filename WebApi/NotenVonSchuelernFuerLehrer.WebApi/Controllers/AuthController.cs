@@ -9,13 +9,13 @@ namespace NotenVonSchuelernFuerLehrer.WebApi.Controllers;
 [Route("login")]
 public class AuthController : ControllerBase
 {
-    private readonly IJwtService _jwt;
+    private readonly JwtService _jwtService;
     private readonly LehrerRepository _lehrerRepository;
     private readonly HashService _hashSerivce;
 
-    public AuthController(IJwtService jwt, LehrerRepository lehrerRepository, HashService hashSerivce)
+    public AuthController(JwtService jwtService, LehrerRepository lehrerRepository, HashService hashSerivce)
     {
-        _jwt = jwt;
+        _jwtService = jwtService;
         _lehrerRepository = lehrerRepository;
         _hashSerivce = hashSerivce;
     }
@@ -27,7 +27,7 @@ public class AuthController : ControllerBase
 
         if(lehrer is not null && _hashSerivce.IsValidPassword(request.Password, lehrer.PasswortHash))
         {
-            var token = _jwt.GenerateToken(request.Username);
+            var token = _jwtService.GenerateToken(lehrer);
             return Ok(new LoginResponse { Token = token });
         }
 

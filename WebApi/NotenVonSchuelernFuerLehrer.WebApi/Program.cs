@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using NotenVonSchuelernFuerLehrer.WebApi.Services;
+using NotenVonSchuelernFuerLehrer.WebApi.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<NotenVonSchuelernFuerLehrerDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("NotenVonSchuelernFuerLehrerConnectionString");
@@ -24,8 +26,12 @@ builder.Services.AddScoped<LehrerRepository>();
 builder.Services.AddScoped<NoteRepository>();
 builder.Services.AddScoped<SchuelerRepository>();
 
-builder.Services.AddSingleton<IJwtService, JwtService>();
+builder.Services.AddSingleton<JwtService>();
 builder.Services.AddSingleton<HashService>();
+builder.Services.AddSingleton<TestdatenAnlegenService>();
+builder.Services.AddSingleton<MigrationService>();
+
+builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection("Jwt"));
 
 builder.Services.AddAuthentication(options =>
 {
@@ -42,16 +48,15 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? string.Empty))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is not configured"))),
     };
 });
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+//TODO: Nicht im Prod verwenden
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
@@ -59,35 +64,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 await app.MigrateDatabase();
+await app.SeedTestData();
 
 app.Run();
-
-
-public class JwtService : IJwtService
-{
-    private readonly IConfiguration _config;
-    public JwtService(IConfiguration config) => _config = config;
-
-    public string GenerateToken(string username)
-    {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"] ?? string.Empty));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var claims = new[] { new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name, username) };
-
-        var token = new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(
-            issuer: _config["Jwt:Issuer"],
-            audience: _config["Jwt:Audience"],
-            claims: claims,
-            expires: DateTime.UtcNow.AddHours(2),
-            signingCredentials: creds
-        );
-
-        return new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler().WriteToken(token);
-    }
-}
-
-public interface IJwtService
-{
-    string GenerateToken(string username);
-}
