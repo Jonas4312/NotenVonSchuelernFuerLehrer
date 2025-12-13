@@ -1,21 +1,46 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NotenVonSchuelernFuerLehrer.WebApi.RequestHandlers;
+using NotenVonSchuelernFuerLehrer.WebApi.Services;
 
 namespace NotenVonSchuelernFuerLehrer.WebApi.Controllers;
 
+[Authorize]
 [ApiController]
-[Route("api/data/schueler")]
+[Route("[controller]")]
 public class SchuelerController : ControllerBase
 {
-    [HttpGet]
-    public IActionResult GetAllSchueler()
+    private readonly RequestExecutor _requestExecutor;
+
+    public SchuelerController(RequestExecutor requestExecutor)
     {
-        var sample = new[] { new { Id = 1, Vorname = "Anna", Nachname = "Schmidt", KlasseId = 1 } };
-        return Ok(sample);
+        _requestExecutor = requestExecutor;
     }
 
-    [HttpGet("{schuelerId}")]
-    public IActionResult GetSchuelerById(int schuelerId)
+    [HttpGet("{schuelerId:guid}")]
+    public async Task<IActionResult> GetSchuelerById(Guid schuelerId)
     {
-        return Ok(new { Id = schuelerId, Vorname = "Anna", Nachname = "Schmidt", KlasseId = 1 });
+        return await _requestExecutor.ExecuteRequestAsync(new LadeSchuelerRequest
+        {
+            SchuelerId = schuelerId
+        });
+    }
+    
+    [HttpDelete]
+    public async Task<IActionResult> DeleteSchueler(LoescheSchuelerRequest request)
+    {
+        return await _requestExecutor.ExecuteRequestAsync(request);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateSchueler(ErstelleSchuelerRequest request)
+    {
+        return await _requestExecutor.ExecuteRequestAsync(request);
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateSchueler(AenderSchuelerRequest request)
+    {
+        return await _requestExecutor.ExecuteRequestAsync(request);
     }
 }

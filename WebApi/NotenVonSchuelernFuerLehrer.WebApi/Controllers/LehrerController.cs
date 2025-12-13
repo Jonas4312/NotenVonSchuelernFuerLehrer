@@ -1,16 +1,25 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NotenVonSchuelernFuerLehrer.WebApi.RequestHandlers;
+using NotenVonSchuelernFuerLehrer.WebApi.Services;
 
 namespace NotenVonSchuelernFuerLehrer.WebApi.Controllers;
 
+[Authorize]
 [ApiController]
-[Route("api/lehrer")]
+[Route("[controller]")]
 public class LehrerController : ControllerBase
 {
-    [HttpGet]
-    public IActionResult GetLehrer()
+    private readonly RequestExecutor _requestExecutor;
+
+    public LehrerController(RequestExecutor requestExecutor)
     {
-        // Placeholder - Jonas bindet DB an
-        var sample = new[] { new { Id = 1, Vorname = "Max", Nachname = "Mustermann" } };
-        return Ok(sample);
+        _requestExecutor = requestExecutor;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetLehrer()
+    {
+        return await _requestExecutor.ExecuteRequestAsync(new LadeLehrerRequest());
     }
 }

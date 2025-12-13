@@ -12,8 +12,20 @@ public class NoteRepository
         _context = context;
     }
     
-    public async Task<Note> LadeNoteAnIdAsync(Guid noteId)
+    public async Task<Note> LadeNoteMitFachUndSchuelerAsync(Guid noteId)
     {
-        return await _context.Note.FirstAsync(n => n.Id == noteId);
+        return await _context.Note
+            .Include(n => n.Fach)
+            .Include(n => n.Schueler)
+            .FirstAsync(n => n.Id == noteId);
+    }
+    
+    public async Task<List<Note>> LadeNotenEinesSchuelersMitFachUndSchuelerAsync(Guid schuelerId)
+    {
+        return await _context.Note
+            .Include(n => n.Fach)
+            .Include(n => n.Schueler)
+            .Where(n => n.SchuelerId == schuelerId)
+            .ToListAsync();
     }
 }

@@ -1,36 +1,23 @@
 using Microsoft.AspNetCore.Mvc;
-using NotenVonSchuelernFuerLehrer.Domain.Service.Repositories;
-using NotenVonSchuelernFuerLehrer.WebApi.DTOs;
+using NotenVonSchuelernFuerLehrer.WebApi.RequestHandlers;
 using NotenVonSchuelernFuerLehrer.WebApi.Services;
 
 namespace NotenVonSchuelernFuerLehrer.WebApi.Controllers;
 
 [ApiController]
-[Route("login")]
+[Route("[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly JwtService _jwtService;
-    private readonly LehrerRepository _lehrerRepository;
-    private readonly HashService _hashSerivce;
+    private readonly RequestExecutor _requestExecutor;
 
-    public AuthController(JwtService jwtService, LehrerRepository lehrerRepository, HashService hashSerivce)
+    public AuthController(RequestExecutor requestExecutor)
     {
-        _jwtService = jwtService;
-        _lehrerRepository = lehrerRepository;
-        _hashSerivce = hashSerivce;
+        _requestExecutor = requestExecutor;
     }
 
-    [HttpPost]
+    [HttpPost("login")]
     public async Task<IActionResult> LoginAsync([FromBody] LoginRequest request)
     {
-        var lehrer = await _lehrerRepository.LadeLehrerAnBenutzernameAsync(request.Username);
-
-        if(lehrer is not null && _hashSerivce.IsValidPassword(request.Password, lehrer.PasswortHash))
-        {
-            var token = _jwtService.GenerateToken(lehrer);
-            return Ok(new LoginResponse { Token = token });
-        }
-
-        return Unauthorized(new { message = "Falsche Login-Daten" });
+        return await _requestExecutor.ExecuteRequestAsync(request);
     }
 }
