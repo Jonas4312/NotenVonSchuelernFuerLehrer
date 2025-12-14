@@ -31,4 +31,22 @@ public class KlasseController : ControllerBase
             KlasseId = klasseId
         });
     }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateKlasse(ErstelleKlasseRequest request)
+    {
+        return await _requestExecutor.ExecuteRequestAsync(request);
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateKlasse(AenderKlasseRequest request)
+    {
+        return await _requestExecutor.ExecuteRequestAsync(request);
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteKlasse(LoescheKlasseRequest request)
+    {
+        return await _requestExecutor.ExecuteRequestAsync(request);
+    }
 }

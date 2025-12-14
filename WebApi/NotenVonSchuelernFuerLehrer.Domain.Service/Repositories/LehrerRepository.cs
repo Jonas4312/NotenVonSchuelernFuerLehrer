@@ -12,6 +12,11 @@ public class LehrerRepository
         _context = context;
     }
 
+    public async Task<Lehrer> LadeLehrerAsync(Guid lehrerId)
+    {
+        return await _context.Lehrer.FirstAsync(l => l.Id == lehrerId);
+    }
+
     public async Task<Lehrer> LadeLehrerMitFaecherUndKlassenAsync(Guid lehrerId)
     {
         return await _context.Lehrer
