@@ -6,6 +6,7 @@ public class Note
     public required Guid SchuelerId { get; init; }
     public required Guid FachId { get; init; }
     public required int Wert { get; set; }
+    public string? Notiz { get; set; }
     public required DateTime ErstelltAm { get; init; }
     public required DateTime AngepasstAm { get; set; }
     

@@ -13,6 +13,7 @@ public class NoteConfiguration : IEntityTypeConfiguration<Note>
         builder.Property(n => n.FachId).IsRequired();
         builder.Property(n => n.SchuelerId).IsRequired();
         builder.Property(n => n.Wert).IsRequired();
+        builder.Property(n => n.Notiz).HasMaxLength(255);
         builder.Property(n => n.ErstelltAm).IsRequired();
         builder.Property(n => n.AngepasstAm).IsRequired();
         

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NotenVonSchuelernFuerLehrer.Domain.Model;
 
@@ -10,9 +11,11 @@ using NotenVonSchuelernFuerLehrer.Domain.Model;
 namespace NotenVonSchuelernFuerLehrer.Domain.Model.Migrations
 {
     [DbContext(typeof(NotenVonSchuelernFuerLehrerDbContext))]
-    partial class NotenVonSchuelernFuerLehrerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251214124141_NotizenZuNote")]
+    partial class NotizenZuNote
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

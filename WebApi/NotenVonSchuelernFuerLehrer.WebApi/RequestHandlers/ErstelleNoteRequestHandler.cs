@@ -48,6 +48,7 @@ public class ErstelleNoteRequestHandler : BaseRequestHandler<ErstelleNoteRequest
             SchuelerId = schueler.Id,
             FachId = fach.Id,
             Wert = request.Wert,
+            Notiz = request.Notiz,
             ErstelltAm = DateTime.UtcNow,
             AngepasstAm = DateTime.UtcNow,
             Schueler = schueler,
@@ -70,6 +71,7 @@ public class ErstelleNoteRequest : IRequest
     public required Guid SchuelerId { get; init; }
     public required Guid FachId { get; init; }
     public required int Wert { get; init; }
+    public string? Notiz { get; init; }
 }
 
 public class ErstelleNoteResponse : IResponse
