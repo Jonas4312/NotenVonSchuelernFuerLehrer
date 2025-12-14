@@ -12,7 +12,7 @@ public class FachRepository
         _context = context;
     }
     
-    public async Task<Fach> LadeFachAnIdAsync(Guid fachId)
+    public async Task<Fach> LadeFachAsync(Guid fachId)
     {
         return await _context.Fach.FirstAsync(f => f.Id == fachId);
     }

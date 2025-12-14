@@ -9,5 +9,21 @@ public class Lehrer
     public required string PasswortHash { get; init; }
     public required byte[] BildByteArray { get; init; }
     
-    public required List<Fach> Faecher { get; init; }
+    public required List<Fach> Faecher { get; init; } = [];
+    
+    public void DarfFachVerwalten(Guid fachId)
+    {
+        if (Faecher.All(f => f.Id != fachId))
+        {
+            throw new UnauthorizedAccessException("Lehrer darf dieses Fach nicht verwalten.");
+        }
+    }
+    
+    public void DarfKlasseVerwalten(Guid klasseId)
+    {
+        if (!Faecher.Any(f => f.Klassen.Any(k => k.Id == klasseId)))
+        {
+            throw new UnauthorizedAccessException("Lehrer darf diese Klasse nicht verwalten.");
+        }
+    }
 }

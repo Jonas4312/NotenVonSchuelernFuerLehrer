@@ -12,7 +12,7 @@ public class KlasseRepository
         _context = context;
     }
     
-    public async Task<Klasse> LadeKlasseAnIdAsync(Guid klasseId)
+    public async Task<Klasse> LadeKlasseAsync(Guid klasseId)
     {
         return await _context.Klasse.FirstAsync(k => k.Id == klasseId);
     }

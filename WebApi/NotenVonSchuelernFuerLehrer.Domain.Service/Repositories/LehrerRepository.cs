@@ -12,7 +12,7 @@ public class LehrerRepository
         _context = context;
     }
 
-    public async Task<Lehrer> LadeLehrerAnIdAsync(Guid lehrerId)
+    public async Task<Lehrer> LadeLehrerMitFaecherUndKlassenAsync(Guid lehrerId)
     {
         return await _context.Lehrer
             .Include(l => l.Faecher)
@@ -20,7 +20,7 @@ public class LehrerRepository
             .FirstAsync(l => l.Id == lehrerId);
     }
     
-    public async Task<Lehrer?> LadeLehrerAnBenutzernameAsync(string benutzername)
+    public async Task<Lehrer?> LadeLehrerMitFaecherUndKlassenAsync(string benutzername)
     {
         return await _context.Lehrer
             .Include(l => l.Faecher)

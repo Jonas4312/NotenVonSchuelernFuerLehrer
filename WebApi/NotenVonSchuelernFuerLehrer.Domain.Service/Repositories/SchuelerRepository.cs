@@ -19,11 +19,8 @@ public class SchuelerRepository
             .ToListAsync();
     }
     
-    public async Task<Schueler> LadeSchuelerAnIdAsync(Guid schuelerId)
+    public async Task<Schueler> LadeSchuelerAsync(Guid schuelerId)
     {
-        return await _context.Schueler
-            .Include(s => s.Noten)
-            .ThenInclude(n => n.Fach)
-            .FirstAsync(s => s.Id == schuelerId);
+        return await _context.Schueler.FirstAsync(s => s.Id == schuelerId);
     }
 }
