@@ -60,25 +60,25 @@ namespace NotenVonSchuelernFuerLehrer.Domain.Model.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "KlasseFach",
+                name: "LehrerKlasse",
                 columns: table => new
                 {
-                    KlasseId = table.Column<Guid>(type: "char(36)", nullable: false),
-                    FachId = table.Column<Guid>(type: "char(36)", nullable: false)
+                    LehrerId = table.Column<Guid>(type: "char(36)", nullable: false),
+                    KlasseId = table.Column<Guid>(type: "char(36)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_KlasseFach", x => new { x.KlasseId, x.FachId });
+                    table.PrimaryKey("PK_LehrerKlasse", x => new { x.LehrerId, x.KlasseId });
                     table.ForeignKey(
-                        name: "FK_KlasseFach_Fach",
-                        column: x => x.FachId,
-                        principalTable: "Fach",
+                        name: "FK_LehrerKlasse_Klasse",
+                        column: x => x.KlasseId,
+                        principalTable: "Klasse",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_KlasseFach_Klasse",
-                        column: x => x.KlasseId,
-                        principalTable: "Klasse",
+                        name: "FK_LehrerKlasse_Lehrer",
+                        column: x => x.LehrerId,
+                        principalTable: "Lehrer",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -161,9 +161,9 @@ namespace NotenVonSchuelernFuerLehrer.Domain.Model.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_KlasseFach_FachId",
-                table: "KlasseFach",
-                column: "FachId");
+                name: "IX_LehrerKlasse_KlasseId",
+                table: "LehrerKlasse",
+                column: "KlasseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LehrerFach_FachId",
@@ -190,7 +190,7 @@ namespace NotenVonSchuelernFuerLehrer.Domain.Model.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "KlasseFach");
+                name: "LehrerKlasse");
 
             migrationBuilder.DropTable(
                 name: "LehrerFach");

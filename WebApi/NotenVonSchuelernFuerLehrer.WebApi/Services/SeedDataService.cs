@@ -18,36 +18,128 @@ public class SeedDataService
 
     public async Task SeedAsync()
     {
-        var matheFach = AddOrCreateFach("Mathematik", "Mathe");
-        var deutschFach = AddOrCreateFach("Deutsch", "Deutsch");
-        var englischFach = AddOrCreateFach("Englisch", "Englisch");
+        var matheFach = AddOrCreateFach("Mathematik", "MA");
+        var deutschFach = AddOrCreateFach("Deutsch", "DE");
+        var englischFach = AddOrCreateFach("Englisch", "EN");
         
         var klasse10A = AddOrCreateKlasse("10A", "10A");
-
-        AddOrCreateFachZuKlasse(matheFach, klasse10A);
-        AddOrCreateFachZuKlasse(deutschFach, klasse10A);
-        AddOrCreateFachZuKlasse(englischFach, klasse10A);
+        var klasse10B = AddOrCreateKlasse("10B", "10B");
+        var klasse9A = AddOrCreateKlasse("9A", "9A");
         
-        var maxMustermannSchueler = AddOrCreateSchueler(klasse10A, "Max", "Mustermann", await DownloadImageAsByteArrayAsync());
-        
+        // Lehrer 1: Maria Schmidt - unterrichtet alle Fächer in allen Klassen
         var mariaSchmidtLehrer = AddOrCreateLehrer("Maria", "Schmidt", "mschmidt", "Passwort123", await DownloadImageAsByteArrayAsync());
-        
         AddOrCreateFachZuLehrer(matheFach, mariaSchmidtLehrer);
         AddOrCreateFachZuLehrer(deutschFach, mariaSchmidtLehrer);
         AddOrCreateFachZuLehrer(englischFach, mariaSchmidtLehrer);
+        AddOrCreateKlasseZuLehrer(klasse10A, mariaSchmidtLehrer);
+        AddOrCreateKlasseZuLehrer(klasse10B, mariaSchmidtLehrer);
+        AddOrCreateKlasseZuLehrer(klasse9A, mariaSchmidtLehrer);
+        
+        // Lehrer 2: Thomas Müller - unterrichtet nur Mathe in 10A und 10B
+        var thomasMuellerLehrer = AddOrCreateLehrer("Thomas", "Müller", "tmueller", "Passwort123", await DownloadImageAsByteArrayAsync());
+        AddOrCreateFachZuLehrer(matheFach, thomasMuellerLehrer);
+        AddOrCreateKlasseZuLehrer(klasse10A, thomasMuellerLehrer);
+        AddOrCreateKlasseZuLehrer(klasse10B, thomasMuellerLehrer);
+        
+        // Lehrer 3: Sabine Weber - unterrichtet Deutsch und Englisch in 9A
+        var sabineWeberLehrer = AddOrCreateLehrer("Sabine", "Weber", "sweber", "Passwort123", await DownloadImageAsByteArrayAsync());
+        AddOrCreateFachZuLehrer(deutschFach, sabineWeberLehrer);
+        AddOrCreateFachZuLehrer(englischFach, sabineWeberLehrer);
+        AddOrCreateKlasseZuLehrer(klasse9A, sabineWeberLehrer);
+        
+        // Lehrer 4: Klaus Fischer - neu eingestellt, hat noch keine Klassen zugeordnet
+        var klausFischerLehrer = AddOrCreateLehrer("Klaus", "Fischer", "kfischer", "Passwort123", await DownloadImageAsByteArrayAsync());
+        // Keine Klassen zugeordnet - sieht keine Schüler
+        
+        // Lehrer 5: Petra Hofmann - unterrichtet nur Englisch in 10A
+        var petraHofmannLehrer = AddOrCreateLehrer("Petra", "Hofmann", "phofmann", "Passwort123", await DownloadImageAsByteArrayAsync());
+        AddOrCreateFachZuLehrer(englischFach, petraHofmannLehrer);
+        AddOrCreateKlasseZuLehrer(klasse10A, petraHofmannLehrer);
 
-        AddOrCreateNote(maxMustermannSchueler, matheFach, 4, DateTime.Parse("2023-09-01"), DateTime.Parse("2023-09-01"));
-        AddOrCreateNote(maxMustermannSchueler, matheFach, 4, DateTime.Parse("2023-09-02"), DateTime.Parse("2023-09-02"));
-        AddOrCreateNote(maxMustermannSchueler, deutschFach, 3, DateTime.Parse("2023-09-02"), DateTime.Parse("2023-09-02"));
-        AddOrCreateNote(maxMustermannSchueler, englischFach, 2, DateTime.Parse("2023-09-03"), DateTime.Parse("2023-09-03"));
+        // 35 Schüler für Klasse 10A
+        var schuelerNamen10A = new[]
+        {
+            ("Max", "Mustermann"), ("Anna", "Müller"), ("Leon", "Schmidt"), ("Emma", "Fischer"),
+            ("Luca", "Weber"), ("Mia", "Meyer"), ("Noah", "Wagner"), ("Sophie", "Becker"),
+            ("Elias", "Hoffmann"), ("Hannah", "Schäfer"), ("Ben", "Koch"), ("Lena", "Bauer"),
+            ("Paul", "Richter"), ("Laura", "Klein"), ("Finn", "Wolf"), ("Marie", "Schröder"),
+            ("Jonas", "Neumann"), ("Lea", "Schwarz"), ("Luis", "Zimmermann"), ("Emilia", "Braun"),
+            ("Felix", "Krüger"), ("Johanna", "Hofmann"), ("Tim", "Hartmann"), ("Clara", "Lange"),
+            ("Nico", "Schmitt"), ("Amelie", "Werner"), ("David", "Schmitz"), ("Sarah", "Krause"),
+            ("Moritz", "Meier"), ("Lara", "Lehmann"), ("Jan", "Schulz"), ("Luisa", "Maier"),
+            ("Tom", "Köhler"), ("Nele", "Herrmann"), ("Erik", "König")
+        };
+        
+        // 29 Schüler für Klasse 10B
+        var schuelerNamen10B = new[]
+        {
+            ("Alexander", "Berger"), ("Julia", "Scholz"), ("Maximilian", "Huber"), ("Katharina", "Fuchs"),
+            ("Sebastian", "Vogel"), ("Christina", "Roth"), ("Florian", "Beck"), ("Vanessa", "Lorenz"),
+            ("Philipp", "Frank"), ("Sabrina", "Albrecht"), ("Michael", "Simon"), ("Jennifer", "Ludwig"),
+            ("Patrick", "Böhm"), ("Melanie", "Winter"), ("Daniel", "Kraus"), ("Nicole", "Schuster"),
+            ("Tobias", "Jäger"), ("Stephanie", "Peters"), ("Christian", "Sommer"), ("Sandra", "Stein"),
+            ("Matthias", "Haas"), ("Nadine", "Graf"), ("Stefan", "Heinrich"), ("Jasmin", "Brandt"),
+            ("Andreas", "Schreiber"), ("Bianca", "Dietrich"), ("Markus", "Kuhn"), ("Tanja", "Engel"),
+            ("Kevin", "Pohl")
+        };
+        
+        // 25 Schüler für Klasse 9A
+        var schuelerNamen9A = new[]
+        {
+            ("Oliver", "Sauer"), ("Lisa", "Arnold"), ("Dennis", "Wolff"), ("Marina", "Pfeiffer"),
+            ("Marcel", "Weiß"), ("Kerstin", "Günther"), ("Dominik", "Baumann"), ("Petra", "Keller"),
+            ("Simon", "Möller"), ("Claudia", "Schmid"), ("Benjamin", "Schäfer"), ("Martina", "Hahn"),
+            ("Fabian", "Schubert"), ("Monika", "Vogt"), ("Julian", "Friedrich"), ("Simone", "Kraft"),
+            ("Robin", "Lindner"), ("Diana", "Böttcher"), ("Alexander", "Krämer"), ("Manuela", "Busch"),
+            ("Marco", "Ritter"), ("Daniela", "Bergmann"), ("Sven", "Bauer"), ("Franziska", "Wendt"),
+            ("Christoph", "Otto")
+        };
+        
+        var random = new Random(42); // Fixed seed für konsistente Daten
+        var faecher = new[] { matheFach, deutschFach, englischFach };
+        
+        // Schüler für Klasse 10A erstellen
+        foreach (var (vorname, nachname) in schuelerNamen10A)
+        {
+            var schueler = AddOrCreateSchueler(klasse10A, vorname, nachname, await DownloadImageAsByteArrayAsync());
+            await AddRandomNotenAsync(schueler, faecher, random);
+        }
+        
+        // Schüler für Klasse 10B erstellen
+        foreach (var (vorname, nachname) in schuelerNamen10B)
+        {
+            var schueler = AddOrCreateSchueler(klasse10B, vorname, nachname, await DownloadImageAsByteArrayAsync());
+            await AddRandomNotenAsync(schueler, faecher, random);
+        }
+        
+        // Schüler für Klasse 9A erstellen
+        foreach (var (vorname, nachname) in schuelerNamen9A)
+        {
+            var schueler = AddOrCreateSchueler(klasse9A, vorname, nachname, await DownloadImageAsByteArrayAsync());
+            await AddRandomNotenAsync(schueler, faecher, random);
+        }
 
         await _context.SaveChangesAsync();
+    }
+    
+    private Task AddRandomNotenAsync(Schueler schueler, Fach[] faecher, Random random)
+    {
+        foreach (var fach in faecher)
+        {
+            var anzahlNoten = random.Next(1, 4); // 1-3 Noten pro Fach
+            for (int i = 0; i < anzahlNoten; i++)
+            {
+                var note = random.Next(1, 7); // Note 1-6
+                var datum = DateTime.Parse("2023-09-01").AddDays(random.Next(0, 90));
+                AddOrCreateNote(schueler, fach, note, datum, datum);
+            }
+        }
+        return Task.CompletedTask;
     }
 
     private Fach AddOrCreateFach(string bezeichnung, string kurzbezeichnung)
     {
         var fach = _context.Fach
-            .Include(f => f.Klassen)
             .Include(l => l.Lehrer)
             .FirstOrDefault(f => f.Bezeichnung == bezeichnung);
         
@@ -62,7 +154,6 @@ public class SeedDataService
             Bezeichnung = bezeichnung,
             Kurzbezeichnung = kurzbezeichnung,
             Noten = [],
-            Klassen = [],
             Lehrer = []
         };
         
@@ -74,6 +165,7 @@ public class SeedDataService
     {
         var klasse = _context.Klasse
             .Include(k => k.Schueler)
+            .Include(k => k.Lehrer)
             .FirstOrDefault(k => k.Bezeichnung == bezeichnung);
         
         if(klasse != null)
@@ -87,24 +179,11 @@ public class SeedDataService
             Bezeichnung = bezeichnung,
             Kurzbezeichnung = kurzbezeichnung,
             Schueler = [],
-            Faecher = []
+            Lehrer = []
         };
         
         var entry = _context.Klasse.Add(newKlasse);
         return entry.Entity;
-    }
-    
-    private void AddOrCreateFachZuKlasse(Fach fach, Klasse klasse)
-    {
-        if(!fach.Klassen.Contains(klasse))
-        {
-            fach.Klassen.Add(klasse);
-        }
-        
-        if(!klasse.Faecher.Contains(fach))
-        {
-            klasse.Faecher.Add(fach);
-        }
     }
     
     private Schueler AddOrCreateSchueler(Klasse klasse, string vorname, string nachname, byte[] bildByteArray)
@@ -136,6 +215,7 @@ public class SeedDataService
     {
         var lehrer = _context.Lehrer
             .Include(l => l.Faecher)
+            .Include(l => l.Klassen)
             .FirstOrDefault(l => l.Benutzername == benutzername);
         
         if(lehrer != null)
@@ -151,7 +231,8 @@ public class SeedDataService
             Benutzername = benutzername,
             PasswortHash = _hashService.HashPassword(passwort),
             BildByteArray = bildByteArray,
-            Faecher = []
+            Faecher = [],
+            Klassen = []
         };
         
         var entry = _context.Lehrer.Add(newLehrer);
@@ -168,6 +249,19 @@ public class SeedDataService
         if(!lehrer.Faecher.Contains(fach))
         {
             lehrer.Faecher.Add(fach);
+        }
+    }
+    
+    private void AddOrCreateKlasseZuLehrer(Klasse klasse, Lehrer lehrer)
+    {
+        if(!klasse.Lehrer.Contains(lehrer))
+        {
+            klasse.Lehrer.Add(lehrer);
+        }
+        
+        if(!lehrer.Klassen.Contains(klasse))
+        {
+            lehrer.Klassen.Add(klasse);
         }
     }
     
@@ -199,8 +293,16 @@ public class SeedDataService
     
     private async Task<byte[]> DownloadImageAsByteArrayAsync()
     {
-        var response = await _httpClient.GetAsync("/50/50");
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadAsByteArrayAsync();
+        try
+        {
+            var response = await _httpClient.GetAsync("/50/50");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsByteArrayAsync();
+        }
+        catch
+        {
+            // Falls kein Internetzugang, erzeuge ein einfaches Placeholder-Bild (1x1 PNG)
+            return Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==");
+        }
     }
 }

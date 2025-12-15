@@ -1,0 +1,1 @@
+export { FachSelector } from './FachSelector';

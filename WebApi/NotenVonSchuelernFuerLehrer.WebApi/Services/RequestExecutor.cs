@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using NotenVonSchuelernFuerLehrer.Domain.Service.Exceptions;
 using NotenVonSchuelernFuerLehrer.WebApi.Exceptions;
 using NotenVonSchuelernFuerLehrer.WebApi.RequestHandlers;
 
@@ -30,6 +31,23 @@ public class RequestExecutor
             {
                 Success = true,
                 Data = response is IEmptyResponse ? null : response
+            });
+        }
+        catch (LehrerNichtGefundenException ex)
+        {
+            // Lehrer existiert nicht mehr in DB (z.B. nach DB-Reset) → 401 zurückgeben
+            return new UnauthorizedObjectResult(new ApiResponse
+            {
+                Success = false,
+                Errors = [ex.Message]
+            });
+        }
+        catch (AuthenticationException authException)
+        {
+            return new UnauthorizedObjectResult(new ApiResponse
+            {
+                Success = false,
+                Errors = [authException.Message]
             });
         }
         catch (ValidationException validationException)

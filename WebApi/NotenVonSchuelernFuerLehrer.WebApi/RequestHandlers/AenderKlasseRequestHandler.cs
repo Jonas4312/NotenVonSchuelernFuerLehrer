@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using NotenVonSchuelernFuerLehrer.Domain.Service.Repositories;
 using NotenVonSchuelernFuerLehrer.Domain.Model;
 using NotenVonSchuelernFuerLehrer.WebApi.Dtos;
@@ -17,7 +18,9 @@ public class AenderKlasseRequestHandler : BaseRequestHandler<AenderKlasseRequest
 
     protected override async Task<AenderKlasseResponse> HandleAsync(AenderKlasseRequest request)
     {
-        var klasse = await _klasseRepository.LadeKlasseAsync(request.KlasseId);
+        var klasse = await _context.Klasse
+            .Include(k => k.Schueler)
+            .FirstAsync(k => k.Id == request.KlasseId);
         
         klasse.Bezeichnung = request.Bezeichnung;
         klasse.Kurzbezeichnung = request.Kurzbezeichnung;

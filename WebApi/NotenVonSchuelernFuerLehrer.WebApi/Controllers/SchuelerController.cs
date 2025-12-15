@@ -17,6 +17,12 @@ public class SchuelerController : ControllerBase
         _requestExecutor = requestExecutor;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetAllSchueler()
+    {
+        return await _requestExecutor.ExecuteRequestAsync(new LadeAlleSchuelerRequest());
+    }
+
     [HttpGet("{schuelerId:guid}")]
     public async Task<IActionResult> GetSchuelerById(Guid schuelerId)
     {

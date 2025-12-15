@@ -22,7 +22,7 @@ public class LadeNotenEinesSchuelersRequestHandler : BaseRequestHandler<LadeNote
     protected override async Task<LadeNotenEinesSchuelersResponse> HandleAsync(LadeNotenEinesSchuelersRequest request)
     {
         var jwtLehrer = _lehrerAccessor.ErmittleLehrerJwt();
-        var lehrer = await _lehrerRepository.LadeLehrerMitFaecherUndKlassenAsync(jwtLehrer.Id);
+        var lehrer = await _lehrerRepository.LadeLehrerMitKlassenAsync(jwtLehrer.Id);
         var noten = await _noteRepository.LadeNotenEinesSchuelersMitFachUndSchuelerAsync(request.SchuelerId);
         var schueler = await _schuelerRepository.LadeSchuelerAsync(request.SchuelerId);
         

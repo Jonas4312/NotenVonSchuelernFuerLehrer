@@ -30,16 +30,36 @@ services:
     ports:
       - "8080:8080"
       - "8081:8081"
+
+  webapp:
+    build:
+      context: WebApp/
+      dockerfile: Dockerfile
+    container_name: WebApp
+    depends_on:
+      - webapi
+    ports:
+      - "3000:80"
     
   yarp:
-    image: mcr.microsoft.com/dotnet/nightly/yarp:2.3-preview
+    build:
+      context: Proxy/
+      dockerfile: Dockerfile
+      args:
+        CERT_PASSWORD: "${CERT_PASSWORD:-changeit}"
     container_name: Yarp
     depends_on:
       - webapi
-    volumes:
-      - ${PWD}/Proxy/yarp.json:/etc/yarp.config
+      - webapp
+    environment:
+      # Passwort für das Zertifikat (Standard: changeit)
+      Kestrel__Certificates__Default__Password: "${CERT_PASSWORD:-changeit}"
+    # Für externes Zertifikat: auskommentieren und cert.pfx in ./Proxy/certs/ ablegen
+    # volumes:
+    #   - ./Proxy/certs/cert.pfx:/app/cert.pfx:ro
     ports:
-      - "5000:5000"
+      - "5001:5001"   # HTTPS (default)
+      # - "5000:5000" # HTTP (unverschlüsselt) - für weitere Reverse Proxies intern verfügbar
 
 volumes:
   mysql:

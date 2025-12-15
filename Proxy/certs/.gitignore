@@ -1,0 +1,7 @@
+# Zertifikate hier ablegen (cert.pfx)
+# Diese Datei wird von Git ignoriert
+*.pfx
+*.pem
+*.key
+*.crt
+!README.md

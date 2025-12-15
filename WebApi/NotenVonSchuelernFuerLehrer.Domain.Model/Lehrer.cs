@@ -10,6 +10,7 @@ public class Lehrer
     public required byte[] BildByteArray { get; set; }
     
     public required List<Fach> Faecher { get; init; } = [];
+    public required List<Klasse> Klassen { get; init; } = [];
     
     public void DarfFachVerwalten(Guid fachId)
     {
@@ -21,7 +22,7 @@ public class Lehrer
     
     public void DarfKlasseVerwalten(Guid klasseId)
     {
-        if (!Faecher.Any(f => f.Klassen.Any(k => k.Id == klasseId)))
+        if (Klassen.All(k => k.Id != klasseId))
         {
             throw new UnauthorizedAccessException("Lehrer darf diese Klasse nicht verwalten.");
         }

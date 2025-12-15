@@ -7,6 +7,5 @@ public class Fach
     public required string Kurzbezeichnung { get; set; }
 
     public required List<Lehrer> Lehrer { get; init; } = [];
-    public required List<Klasse> Klassen { get; init; } = [];
     public required List<Note> Noten { get; init; } = [];
 }

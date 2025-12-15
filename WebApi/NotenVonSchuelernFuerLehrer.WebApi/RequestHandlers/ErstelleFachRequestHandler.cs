@@ -20,7 +20,6 @@ public class ErstelleFachRequestHandler : BaseRequestHandler<ErstelleFachRequest
             Bezeichnung = request.Bezeichnung,
             Kurzbezeichnung = request.Kurzbezeichnung,
             Lehrer = [],
-            Klassen = [],
             Noten = []
         };
 

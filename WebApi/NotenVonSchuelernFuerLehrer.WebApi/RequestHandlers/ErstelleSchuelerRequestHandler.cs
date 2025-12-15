@@ -23,7 +23,7 @@ public class ErstelleSchuelerRequestHandler : BaseRequestHandler<ErstelleSchuele
     protected override async Task<ErstelleSchuelerResponse> HandleAsync(ErstelleSchuelerRequest request)
     {
         var jwtLehrer = _lehrerAccessor.ErmittleLehrerJwt();
-        var lehrer = await _lehrerRepository.LadeLehrerMitFaecherUndKlassenAsync(jwtLehrer.Id);
+        var lehrer = await _lehrerRepository.LadeLehrerMitKlassenAsync(jwtLehrer.Id);
         var klasse = await _klasseRepository.LadeKlasseAsync(request.KlasseId);
         
         lehrer.DarfKlasseVerwalten(klasse.Id);

@@ -18,9 +18,21 @@ public class LehrerController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetLehrer()
+    public async Task<IActionResult> GetAlleLehrer()
+    {
+        return await _requestExecutor.ExecuteRequestAsync(new LadeAlleLehrerRequest());
+    }
+
+    [HttpGet("me")]
+    public async Task<IActionResult> GetAktuellerLehrer()
     {
         return await _requestExecutor.ExecuteRequestAsync(new LadeLehrerRequest());
+    }
+
+    [HttpGet("{lehrerId:guid}")]
+    public async Task<IActionResult> GetLehrerById(Guid lehrerId)
+    {
+        return await _requestExecutor.ExecuteRequestAsync(new LadeEinenLehrerRequest { LehrerId = lehrerId });
     }
 
     [HttpPost]

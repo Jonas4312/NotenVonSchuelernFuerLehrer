@@ -22,7 +22,7 @@ public class LoescheSchuelerRequestHandler : BaseRequestHandler<LoescheSchuelerR
     protected override async Task<LoescheSchuelerResponse> HandleAsync(LoescheSchuelerRequest request)
     {
         var jwtLehrer = _lehrerAccessor.ErmittleLehrerJwt();
-        var lehrer = await _lehrerRepository.LadeLehrerMitFaecherUndKlassenAsync(jwtLehrer.Id);
+        var lehrer = await _lehrerRepository.LadeLehrerMitKlassenAsync(jwtLehrer.Id);
         var schueler = await _schuelerRepository.LadeSchuelerAsync(request.SchuelerId);
         
         lehrer.DarfKlasseVerwalten(schueler.KlasseId);

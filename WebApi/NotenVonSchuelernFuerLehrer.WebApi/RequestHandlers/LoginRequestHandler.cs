@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using NotenVonSchuelernFuerLehrer.Domain.Model;
 using NotenVonSchuelernFuerLehrer.Domain.Service.Repositories;
 using NotenVonSchuelernFuerLehrer.WebApi.Dtos;
 using NotenVonSchuelernFuerLehrer.WebApi.Exceptions;
@@ -7,12 +9,14 @@ namespace NotenVonSchuelernFuerLehrer.WebApi.RequestHandlers;
 
 public class LoginRequestHandler : BaseRequestHandler<LoginRequest, LoginResponse>
 {
+    private readonly NotenVonSchuelernFuerLehrerDbContext _context;
     private readonly LehrerRepository _lehrerRepository;
     private readonly JwtService _jwtService;
     private readonly HashService _hashSerivce;
 
-    public LoginRequestHandler(LehrerRepository lehrerRepository, JwtService jwtService, HashService hashSerivce)
+    public LoginRequestHandler(NotenVonSchuelernFuerLehrerDbContext context, LehrerRepository lehrerRepository, JwtService jwtService, HashService hashSerivce)
     {
+        _context = context;
         _lehrerRepository = lehrerRepository;
         _jwtService = jwtService;
         _hashSerivce = hashSerivce;
@@ -20,10 +24,16 @@ public class LoginRequestHandler : BaseRequestHandler<LoginRequest, LoginRespons
 
     protected override async Task<LoginResponse> HandleAsync(LoginRequest request)
     {
-        var lehrer = await _lehrerRepository.LadeLehrerMitFaecherUndKlassenAsync(request.Username);
+        var lehrer = await _lehrerRepository.LadeLehrerMitKlassenAsync(request.Username);
 
         if (lehrer is not null && _hashSerivce.IsValidPassword(request.Password, lehrer.PasswortHash))
         {
+            // Fächer separat laden
+            var faecher = await _context.Lehrer
+                .Where(l => l.Id == lehrer.Id)
+                .SelectMany(l => l.Faecher)
+                .ToListAsync();
+            
             return new LoginResponse
             {
                 Token = _jwtService.GenerateToken(new JwtLehrer
@@ -34,14 +44,8 @@ public class LoginRequestHandler : BaseRequestHandler<LoginRequest, LoginRespons
                     Nachname = lehrer.Nachname
                 }),
                 Lehrer = LehrerDto.Convert(lehrer),
-                Faecher = lehrer.Faecher
-                    .Select(FachDto.Convert)
-                    .ToList(),
-                Klassen = lehrer.Faecher
-                    .SelectMany(f => f.Klassen)
-                    .DistinctBy(k => k.Id)
-                    .Select(KlasseDto.Convert)
-                    .ToList()
+                Faecher = faecher.Select(FachDto.Convert).ToList(),
+                Klassen = lehrer.Klassen.Select(KlasseDto.Convert).ToList()
             };
         }
 

@@ -23,7 +23,7 @@ public class AenderSchuelerRequestHandler : BaseRequestHandler<AenderSchuelerReq
     protected override async Task<AenderSchuelerResponse> HandleAsync(AenderSchuelerRequest request)
     {
         var jwtLehrer = _lehrerAccessor.ErmittleLehrerJwt();
-        var lehrer = await _lehrerRepository.LadeLehrerMitFaecherUndKlassenAsync(jwtLehrer.Id);
+        var lehrer = await _lehrerRepository.LadeLehrerMitKlassenAsync(jwtLehrer.Id);
         var schueler = await _schuelerRepository.LadeSchuelerAsync(request.Id);
         
         lehrer.DarfKlasseVerwalten(schueler.KlasseId);

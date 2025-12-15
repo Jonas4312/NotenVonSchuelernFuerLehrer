@@ -22,20 +22,20 @@ namespace NotenVonSchuelernFuerLehrer.Domain.Model.Migrations
                 .HasAnnotation("ProductVersion", "9.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("KlasseFach", b =>
+            modelBuilder.Entity("LehrerKlasse", b =>
                 {
+                    b.Property<Guid>("LehrerId")
+                        .HasColumnType("char(36)");
+
                     b.Property<Guid>("KlasseId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("FachId")
-                        .HasColumnType("char(36)");
+                    b.HasKey("LehrerId", "KlasseId")
+                        .HasName("PK_LehrerKlasse");
 
-                    b.HasKey("KlasseId", "FachId")
-                        .HasName("PK_KlasseFach");
+                    b.HasIndex("KlasseId");
 
-                    b.HasIndex("FachId");
-
-                    b.ToTable("KlasseFach", (string)null);
+                    b.ToTable("LehrerKlasse", (string)null);
                 });
 
             modelBuilder.Entity("LehrerFach", b =>
@@ -196,21 +196,21 @@ namespace NotenVonSchuelernFuerLehrer.Domain.Model.Migrations
                     b.ToTable("Schueler");
                 });
 
-            modelBuilder.Entity("KlasseFach", b =>
+            modelBuilder.Entity("LehrerKlasse", b =>
                 {
-                    b.HasOne("NotenVonSchuelernFuerLehrer.Domain.Model.Fach", null)
-                        .WithMany()
-                        .HasForeignKey("FachId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_KlasseFach_Fach");
-
                     b.HasOne("NotenVonSchuelernFuerLehrer.Domain.Model.Klasse", null)
                         .WithMany()
                         .HasForeignKey("KlasseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK_KlasseFach_Klasse");
+                        .HasConstraintName("FK_LehrerKlasse_Klasse");
+
+                    b.HasOne("NotenVonSchuelernFuerLehrer.Domain.Model.Lehrer", null)
+                        .WithMany()
+                        .HasForeignKey("LehrerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_LehrerKlasse_Lehrer");
                 });
 
             modelBuilder.Entity("LehrerFach", b =>

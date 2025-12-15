@@ -53,18 +53,51 @@ public static class ServiceCollectionExtensions
     
     public static void AddRequestHandlers(this IServiceCollection services)
     {
-        services.AddScoped<IRequestHandler, AenderNoteRequestHandler>();
-        services.AddScoped<IRequestHandler, AenderSchuelerRequestHandler>();
+        // Note handlers
         services.AddScoped<IRequestHandler, ErstelleNoteRequestHandler>();
-        services.AddScoped<IRequestHandler, ErstelleSchuelerRequestHandler>();
-        services.AddScoped<IRequestHandler, LadeKlassenEinesLehrersRequestHandler>();
-        services.AddScoped<IRequestHandler, LadeLehrerRequestHandler>();
+        services.AddScoped<IRequestHandler, AenderNoteRequestHandler>();
+        services.AddScoped<IRequestHandler, LoescheNoteRequestHandler>();
         services.AddScoped<IRequestHandler, LadeNoteEinesSchuelersRequestHandler>();
         services.AddScoped<IRequestHandler, LadeNotenEinesSchuelersRequestHandler>();
-        services.AddScoped<IRequestHandler, LadeSchuelerEinerKlasseRequestHandler>();
-        services.AddScoped<IRequestHandler, LadeSchuelerRequestHandler>();
-        services.AddScoped<IRequestHandler, LoescheNoteRequestHandler>();
+        
+        // Schüler handlers
+        services.AddScoped<IRequestHandler, ErstelleSchuelerRequestHandler>();
+        services.AddScoped<IRequestHandler, AenderSchuelerRequestHandler>();
         services.AddScoped<IRequestHandler, LoescheSchuelerRequestHandler>();
+        services.AddScoped<IRequestHandler, LadeSchuelerRequestHandler>();
+        services.AddScoped<IRequestHandler, LadeSchuelerEinerKlasseRequestHandler>();
+        services.AddScoped<IRequestHandler, LadeAlleSchuelerRequestHandler>();
+        
+        // Klasse handlers
+        services.AddScoped<IRequestHandler, ErstelleKlasseRequestHandler>();
+        services.AddScoped<IRequestHandler, AenderKlasseRequestHandler>();
+        services.AddScoped<IRequestHandler, LoescheKlasseRequestHandler>();
+        services.AddScoped<IRequestHandler, LadeKlassenRequestHandler>();
+        services.AddScoped<IRequestHandler, LadeKlassenEinesLehrersRequestHandler>();
+        
+        // Fach handlers
+        services.AddScoped<IRequestHandler, ErstelleFachRequestHandler>();
+        services.AddScoped<IRequestHandler, AenderFachRequestHandler>();
+        services.AddScoped<IRequestHandler, LoescheFachRequestHandler>();
+        services.AddScoped<IRequestHandler, LadeFachRequestHandler>();
+        services.AddScoped<IRequestHandler, LadeFaecherRequestHandler>();
+        services.AddScoped<IRequestHandler, WeiseFachLehrerZuRequestHandler>();
+        services.AddScoped<IRequestHandler, EntferneFachVonLehrerRequestHandler>();
+        
+        // Klasse-Lehrer handlers
+        services.AddScoped<IRequestHandler, LadeAlleKlassenRequestHandler>();
+        services.AddScoped<IRequestHandler, WeiseKlasseLehrerZuRequestHandler>();
+        services.AddScoped<IRequestHandler, EntferneKlasseVonLehrerRequestHandler>();
+        
+        // Lehrer handlers
+        services.AddScoped<IRequestHandler, ErstelleLehrerRequestHandler>();
+        services.AddScoped<IRequestHandler, AenderLehrerRequestHandler>();
+        services.AddScoped<IRequestHandler, LoescheLehrerRequestHandler>();
+        services.AddScoped<IRequestHandler, LadeLehrerRequestHandler>();
+        services.AddScoped<IRequestHandler, LadeAlleLehrerRequestHandler>();
+        services.AddScoped<IRequestHandler, LadeEinenLehrerRequestHandler>();
+        
+        // Auth handlers
         services.AddScoped<IRequestHandler, LoginRequestHandler>();
     }
 

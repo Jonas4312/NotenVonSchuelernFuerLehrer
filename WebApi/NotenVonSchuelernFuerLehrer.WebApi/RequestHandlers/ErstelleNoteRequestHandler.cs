@@ -35,7 +35,7 @@ public class ErstelleNoteRequestHandler : BaseRequestHandler<ErstelleNoteRequest
         }
         
         var jwtLehrer = _lehrerAccessor.ErmittleLehrerJwt();
-        var lehrer = await _lehrerRepository.LadeLehrerMitFaecherUndKlassenAsync(jwtLehrer.Id);
+        var lehrer = await _lehrerRepository.LadeLehrerMitKlassenAsync(jwtLehrer.Id);
         var schueler = await _schuelerRepository.LadeSchuelerAsync(request.SchuelerId);
         var fach = await _fachRepository.LadeFachAsync(request.FachId);
         

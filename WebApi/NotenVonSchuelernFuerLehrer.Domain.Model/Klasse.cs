@@ -7,5 +7,5 @@ public class Klasse
     public required string Kurzbezeichnung { get; set; }
     
     public required List<Schueler> Schueler { get; init; } = [];
-    public required List<Fach> Faecher { get; init; } = [];
+    public required List<Lehrer> Lehrer { get; init; } = [];
 }

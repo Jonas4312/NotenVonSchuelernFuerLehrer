@@ -15,7 +15,9 @@ public class LadeKlassenRequestHandler : BaseRequestHandler<LadeKlassenRequest, 
 
     protected override async Task<LadeKlassenResponse> HandleAsync(LadeKlassenRequest request)
     {
-        var klassen = await _context.Klasse.ToListAsync();
+        var klassen = await _context.Klasse
+            .Include(k => k.Schueler)
+            .ToListAsync();
         
         return new LadeKlassenResponse
         {

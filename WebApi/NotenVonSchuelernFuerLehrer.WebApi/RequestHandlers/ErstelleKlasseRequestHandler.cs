@@ -20,7 +20,7 @@ public class ErstelleKlasseRequestHandler : BaseRequestHandler<ErstelleKlasseReq
             Bezeichnung = request.Bezeichnung,
             Kurzbezeichnung = request.Kurzbezeichnung,
             Schueler = [],
-            Faecher = []
+            Lehrer = []
         };
 
         var entry = _context.Klasse.Add(klasse);

@@ -23,6 +23,12 @@ public class KlasseController : ControllerBase
         return await _requestExecutor.ExecuteRequestAsync(new LadeKlassenEinesLehrersRequest());
     }
 
+    [HttpGet("alle")]
+    public async Task<IActionResult> GetAlleKlassen()
+    {
+        return await _requestExecutor.ExecuteRequestAsync(new LadeAlleKlassenRequest());
+    }
+
     [HttpGet("{klasseId:guid}")]
     public async Task<IActionResult> GetKlasseById(Guid klasseId)
     {
@@ -48,5 +54,25 @@ public class KlasseController : ControllerBase
     public async Task<IActionResult> DeleteKlasse(LoescheKlasseRequest request)
     {
         return await _requestExecutor.ExecuteRequestAsync(request);
+    }
+
+    [HttpPost("{klasseId:guid}/lehrer/{lehrerId:guid}")]
+    public async Task<IActionResult> WeiseKlasseLehrerZu(Guid klasseId, Guid lehrerId)
+    {
+        return await _requestExecutor.ExecuteRequestAsync(new WeiseKlasseLehrerZuRequest
+        {
+            KlasseId = klasseId,
+            LehrerId = lehrerId
+        });
+    }
+
+    [HttpDelete("{klasseId:guid}/lehrer/{lehrerId:guid}")]
+    public async Task<IActionResult> EntferneKlasseVonLehrer(Guid klasseId, Guid lehrerId)
+    {
+        return await _requestExecutor.ExecuteRequestAsync(new EntferneKlasseVonLehrerRequest
+        {
+            KlasseId = klasseId,
+            LehrerId = lehrerId
+        });
     }
 }

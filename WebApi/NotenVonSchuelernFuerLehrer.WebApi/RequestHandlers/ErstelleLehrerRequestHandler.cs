@@ -25,7 +25,8 @@ public class ErstelleLehrerRequestHandler : BaseRequestHandler<ErstelleLehrerReq
             Benutzername = request.Benutzername,
             PasswortHash = _hashService.HashPassword(request.Passwort),
             BildByteArray = request.BildByteArray,
-            Faecher = []
+            Faecher = [],
+            Klassen = []
         };
 
         var entry = _context.Lehrer.Add(lehrer);

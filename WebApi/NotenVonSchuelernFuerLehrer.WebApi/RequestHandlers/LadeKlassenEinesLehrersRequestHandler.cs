@@ -18,13 +18,11 @@ public class LadeKlassenEinesLehrersRequestHandler : BaseRequestHandler<LadeKlas
     protected override async Task<LadeKlassenEinesLehrersResponse> HandleAsync(LadeKlassenEinesLehrersRequest request)
     {
         var jwtLehrer = _lehrerAccessor.ErmittleLehrerJwt();
-        var lehrer = await _lehrerRepository.LadeLehrerMitFaecherUndKlassenAsync(jwtLehrer.Id);
+        var lehrer = await _lehrerRepository.LadeLehrerMitKlassenAsync(jwtLehrer.Id);
         
         return new LadeKlassenEinesLehrersResponse
         {
-            Klassen = lehrer.Faecher
-                .SelectMany(f => f.Klassen)
-                .DistinctBy(k => k.Id)
+            Klassen = lehrer.Klassen
                 .Select(KlasseDto.Convert)
                 .ToList()
         };

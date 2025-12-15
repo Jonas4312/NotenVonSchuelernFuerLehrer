@@ -50,26 +50,6 @@ public class FachController : ControllerBase
         return await _requestExecutor.ExecuteRequestAsync(request);
     }
 
-    [HttpPost("{fachId:guid}/klasse/{klasseId:guid}")]
-    public async Task<IActionResult> WeiseFachKlasseZu(Guid fachId, Guid klasseId)
-    {
-        return await _requestExecutor.ExecuteRequestAsync(new WeiseFachKlasseZuRequest
-        {
-            FachId = fachId,
-            KlasseId = klasseId
-        });
-    }
-
-    [HttpDelete("{fachId:guid}/klasse/{klasseId:guid}")]
-    public async Task<IActionResult> EntferneFachVonKlasse(Guid fachId, Guid klasseId)
-    {
-        return await _requestExecutor.ExecuteRequestAsync(new EntferneFachVonKlasseRequest
-        {
-            FachId = fachId,
-            KlasseId = klasseId
-        });
-    }
-
     [HttpPost("{fachId:guid}/lehrer/{lehrerId:guid}")]
     public async Task<IActionResult> WeiseFachLehrerZu(Guid fachId, Guid lehrerId)
     {

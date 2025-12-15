@@ -17,6 +17,12 @@
         "Transforms": [
           { "PathRemovePrefix": "/api" }
         ]
+      },
+      "WebAppRoute": {
+        "ClusterId": "WebAppCluster",
+        "Match": {
+          "Path": "{**catch-all}"
+        }
       }
     },
     "Clusters": {
@@ -24,6 +30,13 @@
         "Destinations": {
           "WebApiClusterDestination01": {
             "Address": "http://webapi:8080"
+          }
+        }
+      },
+      "WebAppCluster": {
+        "Destinations": {
+          "WebAppClusterDestination01": {
+            "Address": "http://webapp:80"
           }
         }
       }

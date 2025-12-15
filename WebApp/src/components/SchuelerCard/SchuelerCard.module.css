@@ -1,0 +1,152 @@
+.card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background-color: var(--color-bg-card);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all var(--transition);
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+}
+
+.card:hover {
+  border-color: var(--color-primary-light);
+  background-color: var(--color-bg-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.card.selected {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+.avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vorname {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nachname {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.durchschnitt {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.note-excellent {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.note-good {
+  background-color: #ecfccb;
+  color: #3f6212;
+}
+
+.note-satisfactory {
+  background-color: #fef9c3;
+  color: #854d0e;
+}
+
+.note-adequate {
+  background-color: #ffedd5;
+  color: #9a3412;
+}
+
+.note-poor {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.note-fail {
+  background-color: #fecaca;
+  color: #7f1d1d;
+}
+
+.notenCount {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+/* Mobile Styles - Kompakte horizontale Karten */
+@media (max-width: 768px) {
+  .card {
+    flex-direction: row;
+    text-align: left;
+    padding: var(--spacing-sm) var(--spacing-md);
+    gap: var(--spacing-sm);
+  }
+  
+  .info {
+    align-items: flex-start;
+  }
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .name {
+    font-size: 0.9rem;
+  }
+  
+  .notenCount {
+    font-size: 0.8rem;
+  }
+}

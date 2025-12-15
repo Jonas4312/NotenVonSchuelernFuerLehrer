@@ -1,0 +1,245 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+/* Read-Only Badge */
+.readOnlyBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: #e0e7ff;
+  color: #3730a3;
+  border-radius: var(--border-radius-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  align-self: flex-start;
+}
+
+.header {
+  background-color: var(--color-bg-card);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+.profileSection {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background-color: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.name {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.editSchuelerButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.editSchuelerButton:hover {
+  background-color: var(--color-bg-hover);
+  color: var(--color-primary);
+}
+
+.fachHinweis {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.fachHinweis strong {
+  color: var(--color-primary);
+}
+
+.durchschnittLabel {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.durchschnittValue {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.noDurchschnitt {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+/* Note Color Classes */
+.note-excellent { color: var(--color-note-excellent); }
+.note-good { color: var(--color-note-good); }
+.note-satisfactory { color: var(--color-note-satisfactory); }
+.note-adequate { color: var(--color-note-adequate); }
+.note-poor { color: var(--color-note-poor); }
+.note-fail { color: var(--color-note-fail); }
+
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.addButton:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.section {
+  background-color: var(--color-bg-card);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.fachBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.fachBadge {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-bg);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.fachName {
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.fachDurchschnitt {
+  font-weight: 700;
+}
+
+.fachAnzahl {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+/* Tablet Styles */
+@media (max-width: 900px) {
+  .header {
+    padding: var(--spacing-md);
+  }
+  
+  .section {
+    padding: var(--spacing-md);
+  }
+  
+  .avatar {
+    width: 64px;
+    height: 64px;
+  }
+  
+  .name {
+    font-size: 1.25rem;
+  }
+  
+  .addButton {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: var(--spacing-sm);
+  }
+  
+  .profileSection {
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .addButton {
+    justify-content: center;
+  }
+  
+  .name {
+    font-size: 1.1rem;
+  }
+  
+  .avatar {
+    width: 56px;
+    height: 56px;
+  }
+  
+  .fachBadges {
+    justify-content: center;
+  }
+}

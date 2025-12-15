@@ -1,0 +1,1 @@
+export { KlasseSelector } from './KlasseSelector';

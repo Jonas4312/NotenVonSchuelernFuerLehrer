@@ -33,7 +33,7 @@ public class AenderNoteRequestHandler : BaseRequestHandler<AenderNoteRequest, Ae
         }
         
         var jwtLehrer = _lehrerAccessor.ErmittleLehrerJwt();
-        var lehrer = await _lehrerRepository.LadeLehrerMitFaecherUndKlassenAsync(jwtLehrer.Id);
+        var lehrer = await _lehrerRepository.LadeLehrerMitKlassenAsync(jwtLehrer.Id);
         var note = await _noteRepository.LadeNoteMitFachUndSchuelerAsync(request.NoteId);
         
         lehrer.DarfFachVerwalten(note.FachId);

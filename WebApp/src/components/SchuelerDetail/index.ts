@@ -1,0 +1,1 @@
+export { SchuelerDetail } from './SchuelerDetail';

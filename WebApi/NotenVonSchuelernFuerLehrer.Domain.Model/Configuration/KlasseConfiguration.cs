@@ -14,16 +14,16 @@ public class KlasseConfiguration : IEntityTypeConfiguration<Klasse>
         builder.Property(k => k.Kurzbezeichnung).IsRequired().HasMaxLength(255);
         
         builder
-            .HasMany(k => k.Faecher)
-            .WithMany(f => f.Klassen)
+            .HasMany(k => k.Lehrer)
+            .WithMany(l => l.Klassen)
             .UsingEntity(
-                "KlasseFach",
-                j => j.HasOne(typeof(Fach)).WithMany().HasForeignKey("FachId").HasConstraintName("FK_KlasseFach_Fach"),
-                j => j.HasOne(typeof(Klasse)).WithMany().HasForeignKey("KlasseId").HasConstraintName("FK_KlasseFach_Klasse"), 
+                "LehrerKlasse",
+                j => j.HasOne(typeof(Lehrer)).WithMany().HasForeignKey("LehrerId").HasConstraintName("FK_LehrerKlasse_Lehrer"),
+                j => j.HasOne(typeof(Klasse)).WithMany().HasForeignKey("KlasseId").HasConstraintName("FK_LehrerKlasse_Klasse"), 
                 j =>
                 { 
-                    j.HasKey("KlasseId", "FachId").HasName("PK_KlasseFach"); 
-                    j.ToTable("KlasseFach");
+                    j.HasKey("LehrerId", "KlasseId").HasName("PK_LehrerKlasse"); 
+                    j.ToTable("LehrerKlasse");
                 });
     }
 }
