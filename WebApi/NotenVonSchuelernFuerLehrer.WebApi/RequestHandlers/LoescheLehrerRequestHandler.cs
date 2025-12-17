@@ -19,6 +19,8 @@ public class LoescheLehrerRequestHandler : BaseRequestHandler<LoescheLehrerReque
         var lehrer = await _lehrerRepository.LadeLehrerAsync(request.LehrerId);
         
         lehrer.IsDeleted = true;
+        // Benutzername bleibt unverändert - Unique-Constraint wurde entfernt.
+        // Die Prüfung auf Eindeutigkeit erfolgt programmatisch nur für aktive Lehrer (IsDeleted = false).
         await _context.SaveChangesAsync();
 
         return new LoescheLehrerResponse();

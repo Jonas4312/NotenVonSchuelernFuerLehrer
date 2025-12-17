@@ -61,7 +61,7 @@ export const Settings = () => {
       setBenutzernameSuccess(true);
     } catch (error) {
       console.error('Fehler beim Speichern:', error);
-      setBenutzernameError('Fehler beim Speichern');
+      setBenutzernameError('Fehler beim Speichern. Stellen Sie sicher, dass der Benutzername nicht bereits vergeben ist.');
     }
   };
 
