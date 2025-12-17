@@ -151,7 +151,7 @@ export const schuelerApi = {
 
   update: async (schuelerId: string, data: { vorname?: string; nachname?: string; klasseId?: string; bildByteArray?: string }): Promise<SchuelerDto> => {
     const response = await apiClient.put<{ schueler: SchuelerDto }>('/schueler', {
-      schuelerId,
+      id: schuelerId,
       ...data,
     });
     return response.data.schueler;
