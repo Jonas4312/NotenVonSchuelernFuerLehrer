@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { GraduationCap, LogOut, User, Settings, BookOpen, Home, ChevronDown } from 'lucide-react';
 import type { Lehrer } from '../../types';
 import styles from './Header.module.css';
@@ -17,11 +18,17 @@ export const Header = ({
   title = 'Notenverwaltung', 
   lehrer, 
   onLogout,
-  currentPage = 'dashboard',
-  onNavigate,
 }: HeaderProps) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
+
+  // Aktuelle Seite aus URL ableiten
+  const currentPage: PageType = 
+    location.pathname === '/admin' ? 'admin' :
+    location.pathname === '/einstellungen' ? 'settings' : 
+    'dashboard';
 
   // Schließe Menü bei Klick außerhalb
   useEffect(() => {
@@ -39,14 +46,29 @@ export const Header = ({
     setIsProfileMenuOpen(!isProfileMenuOpen);
   };
 
+  const handleNavigate = (page: PageType) => {
+    switch (page) {
+      case 'dashboard':
+        navigate('/');
+        break;
+      case 'admin':
+        navigate('/admin');
+        break;
+      case 'settings':
+        navigate('/einstellungen');
+        break;
+    }
+  };
+
   const handleSettingsClick = () => {
-    onNavigate?.('settings');
+    handleNavigate('settings');
     setIsProfileMenuOpen(false);
   };
 
   const handleLogoutClick = () => {
     setIsProfileMenuOpen(false);
     onLogout?.();
+    navigate('/login');
   };
 
   return (
@@ -58,26 +80,24 @@ export const Header = ({
         </div>
         
         {/* Navigation */}
-        {onNavigate && (
-          <nav className={styles.nav} aria-label="Hauptnavigation">
-            <button
-              className={`${styles.navButton} ${currentPage === 'dashboard' ? styles.navButtonActive : ''}`}
-              onClick={() => onNavigate('dashboard')}
-              aria-current={currentPage === 'dashboard' ? 'page' : undefined}
-            >
-              <Home size={18} aria-hidden="true" />
-              <span>Noten</span>
-            </button>
-            <button
-              className={`${styles.navButton} ${currentPage === 'admin' ? styles.navButtonActive : ''}`}
-              onClick={() => onNavigate('admin')}
-              aria-current={currentPage === 'admin' ? 'page' : undefined}
-            >
-              <BookOpen size={18} aria-hidden="true" />
-              <span>Verwaltung</span>
-            </button>
-          </nav>
-        )}
+        <nav className={styles.nav} aria-label="Hauptnavigation">
+          <button
+            className={`${styles.navButton} ${currentPage === 'dashboard' ? styles.navButtonActive : ''}`}
+            onClick={() => handleNavigate('dashboard')}
+            aria-current={currentPage === 'dashboard' ? 'page' : undefined}
+          >
+            <Home size={18} aria-hidden="true" />
+            <span>Noten</span>
+          </button>
+          <button
+            className={`${styles.navButton} ${currentPage === 'admin' ? styles.navButtonActive : ''}`}
+            onClick={() => handleNavigate('admin')}
+            aria-current={currentPage === 'admin' ? 'page' : undefined}
+          >
+            <BookOpen size={18} aria-hidden="true" />
+            <span>Verwaltung</span>
+          </button>
+        </nav>
         
         {lehrer && (
           <div className={styles.userSection} ref={profileMenuRef}>
