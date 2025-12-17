@@ -54,6 +54,7 @@ export const LehrerTab = () => {
         nachname,
         benutzername,
         passwort,
+        bildByteArray: '',
       });
       
       // Fächer zuweisen

@@ -88,8 +88,8 @@ export const Header = ({
               aria-haspopup="true"
             >
               <div className={styles.avatar}>
-                {lehrer.bildUrl ? (
-                  <img src={lehrer.bildUrl} alt="" className={styles.avatarImage} />
+                {lehrer.bildByteArray ? (
+                  <img src={`data:image/jpeg;base64,${lehrer.bildByteArray}`} alt="" className={styles.avatarImage} />
                 ) : (
                   <User size={20} aria-hidden="true" />
                 )}

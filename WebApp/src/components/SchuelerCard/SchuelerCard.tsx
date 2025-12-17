@@ -23,9 +23,9 @@ export const SchuelerCard = ({ schueler, isSelected, onClick }: SchuelerCardProp
       aria-label={`${vollstaendigerName}, ${notenAnzahl} Noten, Durchschnitt ${durchschnitt > 0 ? formatNote(durchschnitt) : 'keine Noten'}`}
     >
       <div className={styles.avatar}>
-        {schueler.bildUrl ? (
+        {schueler.bildByteArray ? (
           <img
-            src={schueler.bildUrl}
+            src={`data:image/jpeg;base64,${schueler.bildByteArray}`}
             alt=""
             className={styles.avatarImage}
             loading="lazy"

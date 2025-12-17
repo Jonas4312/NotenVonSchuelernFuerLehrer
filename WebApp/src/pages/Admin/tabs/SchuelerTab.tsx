@@ -80,13 +80,20 @@ export const SchuelerTab = () => {
 
   const handleSave = async (vorname: string, nachname: string, klasseId: string, bildUrl?: string) => {
     try {
+      // Base64-String aus Data-URL extrahieren (falls vorhanden)
+      let bildByteArray: string | undefined = undefined;
+      if (bildUrl && bildUrl.startsWith('data:')) {
+        // Format: data:image/png;base64,<base64data>
+        bildByteArray = bildUrl.split(',')[1] || undefined;
+      }
+
       if (editingSchueler) {
-        // Bearbeiten
+        // Bearbeiten - existierendes Bild beibehalten wenn kein neues gewählt
         await schuelerApi.update(editingSchueler.id, {
           vorname,
           nachname,
           klasseId,
-          bildByteArray: bildUrl,
+          bildByteArray: bildByteArray ?? editingSchueler.bildByteArray,
         });
       } else {
         // Neu erstellen
@@ -94,7 +101,7 @@ export const SchuelerTab = () => {
           vorname,
           nachname,
           klasseId,
-          bildByteArray: bildUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${vorname}${Date.now()}`,
+          bildByteArray: bildByteArray ?? '',
         });
       }
       

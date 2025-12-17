@@ -1,12 +1,13 @@
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
-import type { Lehrer, Klasse, LoginCredentials, AuthState } from '../types';
+import type { Lehrer, LoginCredentials, AuthState } from '../types';
 import { authApi } from '../services/api';
 
+// AuthContext enthält nur Auth-relevante Daten
+// Business-Daten (Klassen, Fächer) sollten separat vom API geladen werden
 interface AuthContextType extends AuthState {
   login: (credentials: LoginCredentials) => Promise<boolean>;
   logout: () => void;
   updateLehrer: (lehrer: Lehrer) => void;
-  klassen: Klasse[];
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -30,18 +31,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     token: null,
     isLoading: true,
   });
-  const [klassen, setKlassen] = useState<Klasse[]>([]);
 
   // Beim Start: Check ob bereits eingeloggt (localStorage)
+  // Nur Auth-relevante Daten werden gecacht - Business-Daten werden frisch vom API geladen
   useEffect(() => {
     const savedToken = localStorage.getItem('token');
     const savedLehrer = localStorage.getItem('lehrer');
-    const savedKlassen = localStorage.getItem('klassen');
     
     if (savedToken && savedLehrer) {
       try {
         const lehrer = JSON.parse(savedLehrer) as Lehrer;
-        const parsedKlassen = savedKlassen ? JSON.parse(savedKlassen) as Klasse[] : [];
         
         setState({
           isAuthenticated: true,
@@ -49,11 +48,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           token: savedToken,
           isLoading: false,
         });
-        setKlassen(parsedKlassen);
       } catch {
         localStorage.removeItem('token');
         localStorage.removeItem('lehrer');
-        localStorage.removeItem('klassen');
         setState(prev => ({ ...prev, isLoading: false }));
       }
     } else {
@@ -67,24 +64,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       const response = await authApi.login(credentials.benutzername, credentials.passwort);
       
-      // Lehrer mit Fächern zusammenbauen
+      // Nur Auth-relevante Lehrer-Daten speichern (ohne Klassen/Fächer)
+      // Business-Daten werden bei Bedarf frisch vom API geladen
       const lehrer: Lehrer = {
         id: response.lehrer.id,
         vorname: response.lehrer.vorname,
         nachname: response.lehrer.nachname,
         benutzername: response.lehrer.benutzername,
         bildByteArray: response.lehrer.bildByteArray,
-        bildUrl: response.lehrer.bildByteArray 
-          ? `data:image/jpeg;base64,${response.lehrer.bildByteArray}` 
-          : undefined,
-        faecher: response.faecher,
-        klassen: response.klassen,
+        faecher: [], // Wird bei Bedarf frisch geladen
       };
 
-      // In localStorage speichern
+      // Nur Token und Basis-Lehrer-Daten im localStorage
       localStorage.setItem('token', response.token);
       localStorage.setItem('lehrer', JSON.stringify(lehrer));
-      localStorage.setItem('klassen', JSON.stringify(response.klassen));
       
       setState({
         isAuthenticated: true,
@@ -92,7 +85,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         token: response.token,
         isLoading: false,
       });
-      setKlassen(response.klassen);
       
       return true;
     } catch (error) {
@@ -105,14 +97,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = useCallback(() => {
     localStorage.removeItem('token');
     localStorage.removeItem('lehrer');
-    localStorage.removeItem('klassen');
     setState({
       isAuthenticated: false,
       lehrer: null,
       token: null,
       isLoading: false,
     });
-    setKlassen([]);
   }, []);
 
   const updateLehrer = useCallback((updatedLehrer: Lehrer) => {
@@ -124,7 +114,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ ...state, login, logout, updateLehrer, klassen }}>
+    <AuthContext.Provider value={{ ...state, login, logout, updateLehrer }}>
       {children}
     </AuthContext.Provider>
   );

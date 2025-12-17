@@ -19,8 +19,10 @@ export const Settings = () => {
   const [passwortError, setPasswortError] = useState('');
   const [passwortSuccess, setPasswortSuccess] = useState(false);
   
-  // Profilbild
-  const [bildPreview, setBildPreview] = useState<string | null>(lehrer?.bildByteArray || null);
+  // Profilbild - bildByteArray ist Base64, muss als Data-URL angezeigt werden
+  const [bildPreview, setBildPreview] = useState<string | null>(
+    lehrer?.bildByteArray ? `data:image/jpeg;base64,${lehrer.bildByteArray}` : null
+  );
   const [bildFile, setBildFile] = useState<File | null>(null);
   const [bildSuccess, setBildSuccess] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -48,7 +50,13 @@ export const Settings = () => {
     if (!lehrer) return;
 
     try {
-      const updated = await lehrerApi.update(lehrer.id, { benutzername });
+      // Backend erfordert alle Felder, also senden wir die aktuellen Werte mit
+      const updated = await lehrerApi.update(lehrer.id, { 
+        vorname: lehrer.vorname,
+        nachname: lehrer.nachname,
+        benutzername,
+        bildByteArray: lehrer.bildByteArray || '',
+      });
       updateLehrer({ ...lehrer, ...updated });
       setBenutzernameSuccess(true);
     } catch (error) {
@@ -86,9 +94,14 @@ export const Settings = () => {
     if (!lehrer) return;
 
     try {
-      // TODO: Das Backend braucht noch einen speziellen Endpoint für Passwort-Änderung
-      // Vorerst nutzen wir update mit neuem Passwort
-      await lehrerApi.update(lehrer.id, { passwort: neuesPasswort });
+      // Backend erfordert alle Felder
+      await lehrerApi.update(lehrer.id, { 
+        vorname: lehrer.vorname,
+        nachname: lehrer.nachname,
+        benutzername: lehrer.benutzername,
+        passwort: neuesPasswort,
+        bildByteArray: lehrer.bildByteArray || '',
+      });
       setPasswortSuccess(true);
       setAktuellesPasswort('');
       setNeuesPasswort('');
@@ -119,11 +132,18 @@ export const Settings = () => {
     if (!bildFile || !lehrer) return;
 
     try {
-      // Bild als Base64 senden
+      // Bild als Base64 senden - Backend erwartet nur den Base64-Teil ohne Data-URL-Prefix
       const reader = new FileReader();
       reader.onloadend = async () => {
-        const base64 = reader.result as string;
-        const updated = await lehrerApi.update(lehrer.id, { bildByteArray: base64 });
+        const dataUrl = reader.result as string;
+        // Extrahiere nur den Base64-Teil (nach dem Komma)
+        const base64 = dataUrl.includes(',') ? dataUrl.split(',')[1] : dataUrl;
+        const updated = await lehrerApi.update(lehrer.id, { 
+          vorname: lehrer.vorname,
+          nachname: lehrer.nachname,
+          benutzername: lehrer.benutzername,
+          bildByteArray: base64,
+        });
         updateLehrer({ ...lehrer, ...updated });
         setBildSuccess(true);
         setBildFile(null);

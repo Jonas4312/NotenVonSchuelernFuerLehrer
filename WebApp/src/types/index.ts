@@ -57,8 +57,7 @@ export interface Klasse extends KlasseDto {
 
 export interface Schueler extends Omit<SchuelerDto, 'bildByteArray'> {
   klasseId?: string;
-  bildUrl?: string;
-  bildByteArray?: string;
+  bildByteArray?: string; // Base64-encoded image - use as data:image/jpeg;base64,{bildByteArray}
   noten?: Note[];
 }
 
@@ -80,8 +79,7 @@ export interface Lehrer {
   vorname: string;
   nachname: string;
   benutzername: string;
-  bildUrl?: string;
-  bildByteArray?: string;
+  bildByteArray?: string; // Base64-encoded image - use as data:image/jpeg;base64,{bildByteArray}
   faecher: Fach[];
   klassen?: Klasse[];
 }

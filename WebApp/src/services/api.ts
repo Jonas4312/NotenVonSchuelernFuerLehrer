@@ -226,6 +226,16 @@ export const lehrerApi = {
     return response.data.lehrer;
   },
 
+  // Eingeloggten Lehrer mit Fächern und Klassen laden
+  getMe: async (): Promise<{ lehrer: LehrerDto; faecher: FachDto[]; klassen: KlasseDto[] }> => {
+    const response = await apiClient.get<{ lehrer: LehrerDto; faecher: FachDto[]; klassen: KlasseDto[] }>('/lehrer/me');
+    return {
+      lehrer: response.data.lehrer,
+      faecher: response.data.faecher || [],
+      klassen: response.data.klassen || [],
+    };
+  },
+
   getById: async (lehrerId: string): Promise<LehrerDto> => {
     const response = await apiClient.get<{ lehrer: LehrerDto; faecher?: FachDto[]; klassen?: KlasseDto[] }>(`/lehrer/${lehrerId}`);
     // faecher und klassen kommen auf data-Ebene, nicht innerhalb von lehrer

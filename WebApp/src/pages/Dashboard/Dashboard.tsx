@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef, type ChangeEvent } from 'react';
 import { ArrowLeft, X, Upload, User } from 'lucide-react';
 import type { Klasse, Schueler, Fach, Note, NoteFormData } from '../../types';
-import { klassenApi, notenApi, schuelerApi } from '../../services/api';
-import { useAuth } from '../../context';
+import { klassenApi, notenApi, schuelerApi, lehrerApi } from '../../services/api';
 import {
   KlasseSelector,
   FachSelector,
@@ -14,10 +13,9 @@ import {
 import styles from './Dashboard.module.css';
 
 export const Dashboard = () => {
-  const { lehrer, klassen: authKlassen } = useAuth();
-  
-  // State
+  // State - Daten werden frisch vom API geladen, nicht aus dem AuthContext gecacht
   const [klassen, setKlassen] = useState<Klasse[]>([]);
+  const [faecher, setFaecher] = useState<Fach[]>([]);
   const [schuelerList, setSchuelerList] = useState<Schueler[]>([]);
   const [selectedKlasse, setSelectedKlasse] = useState<Klasse | null>(null);
   const [selectedFach, setSelectedFach] = useState<Fach | null>(null);
@@ -36,10 +34,10 @@ export const Dashboard = () => {
 
   // Verfügbare Fächer für die ausgewählte Klasse (gefiltert nach Lehrer-Fächern)
   const availableFaecher = useMemo(() => {
-    if (!selectedKlasse || !lehrer) return [];
-    // Da Klassen vom Login kommen, haben sie keine Fächer-Liste - nutze Lehrer-Fächer direkt
-    return lehrer.faecher;
-  }, [selectedKlasse, lehrer]);
+    if (!selectedKlasse) return [];
+    // Nutze die frisch vom API geladenen Fächer
+    return faecher;
+  }, [selectedKlasse, faecher]);
 
   // Schüler mit Noten kombinieren
   const schuelerMitNoten = useMemo((): Schueler | null => {
@@ -55,22 +53,36 @@ export const Dashboard = () => {
     };
   }, [selectedSchueler, schuelerNoten, selectedFach]);
 
-  // Klassen vom AuthContext laden
+  // Klassen und Fächer frisch vom API laden (nicht aus gecachtem AuthContext)
   useEffect(() => {
-    if (authKlassen && authKlassen.length > 0) {
-      // Klassen mit leerer Schüler-/Fächer-Liste initialisieren
-      const klassenMitListen = authKlassen.map(k => ({
-        ...k,
-        schueler: [],
-        faecher: lehrer?.faecher || [],
-      }));
-      setKlassen(klassenMitListen);
-      setSelectedKlasse(klassenMitListen[0]);
-      setIsLoading(false);
-    } else {
-      setIsLoading(false);
-    }
-  }, [authKlassen, lehrer?.faecher]);
+    const loadLehrerData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await lehrerApi.getMe();
+        
+        // Klassen mit leerer Schüler-Liste initialisieren
+        const klassenMitListen = response.klassen.map(k => ({
+          ...k,
+          schueler: [],
+        }));
+        
+        setKlassen(klassenMitListen);
+        setFaecher(response.faecher);
+        
+        if (klassenMitListen.length > 0) {
+          setSelectedKlasse(klassenMitListen[0]);
+        }
+      } catch (error) {
+        console.error('Fehler beim Laden der Lehrer-Daten:', error);
+        setKlassen([]);
+        setFaecher([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadLehrerData();
+  }, []);
 
   // Schüler laden wenn Klasse ausgewählt wird
   useEffect(() => {
@@ -83,10 +95,10 @@ export const Dashboard = () => {
       try {
         setIsLoadingSchueler(true);
         const response = await klassenApi.getSchueler(selectedKlasse.id);
-        // Konvertiere SchuelerDto zu Schueler
+        // Konvertiere SchuelerDto zu Schueler - bildByteArray bleibt unverändert
         const schueler: Schueler[] = response.map((s) => ({
           ...s,
-          bildUrl: s.bildByteArray ? `data:image/jpeg;base64,${s.bildByteArray}` : undefined,
+          bildByteArray: s.bildByteArray || undefined,
           noten: [],
         }));
         setSchuelerList(schueler);
@@ -296,8 +308,8 @@ export const Dashboard = () => {
     [selectedSchueler, editingNote]
   );
 
-  // Prüfe ob Lehrer Fächer zugewiesen hat
-  const hatKeineFaecher = !lehrer?.faecher || lehrer.faecher.length === 0;
+  // Prüfe ob Lehrer Fächer zugewiesen hat (basierend auf frisch geladenen Daten)
+  const hatKeineFaecher = !isLoading && faecher.length === 0;
   
   // Prüfe ob Lehrer in keiner Klasse unterrichten kann
   const hatKeineKlassen = !isLoading && klassen.length === 0;
@@ -335,14 +347,12 @@ export const Dashboard = () => {
         bildByteArray,
       });
 
+      // Nur bildByteArray speichern, nicht bildUrl
       const updatedSchueler: Schueler = {
         ...selectedSchueler,
         vorname: response.vorname,
         nachname: response.nachname,
-        bildByteArray: response.bildByteArray,
-        bildUrl: response.bildByteArray 
-          ? `data:image/jpeg;base64,${response.bildByteArray}` 
-          : undefined,
+        bildByteArray: response.bildByteArray || undefined,
       };
 
       setSelectedSchueler(updatedSchueler);
@@ -517,7 +527,10 @@ interface SchuelerEditModalProps {
 const SchuelerEditModal = ({ schueler, onSave, onClose }: SchuelerEditModalProps) => {
   const [vorname, setVorname] = useState(schueler.vorname);
   const [nachname, setNachname] = useState(schueler.nachname);
-  const [bildPreview, setBildPreview] = useState<string | null>(schueler.bildUrl || null);
+  // bildByteArray als Data-URL für die Vorschau anzeigen
+  const [bildPreview, setBildPreview] = useState<string | null>(
+    schueler.bildByteArray ? `data:image/jpeg;base64,${schueler.bildByteArray}` : null
+  );
   const [newBildUrl, setNewBildUrl] = useState<string | undefined>(undefined);
   const fileInputRef = useRef<HTMLInputElement>(null);
 

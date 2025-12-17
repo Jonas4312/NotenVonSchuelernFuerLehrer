@@ -28,6 +28,7 @@ public class LehrerRepository
         var lehrer = await _context.Lehrer
             .Include(l => l.Klassen)
             .ThenInclude(k => k.Schueler)
+            .Include(l => l.Faecher)
             .FirstOrDefaultAsync(l => l.Id == lehrerId);
         
         if (lehrer is null)
@@ -42,6 +43,7 @@ public class LehrerRepository
         return await _context.Lehrer
             .Include(l => l.Klassen)
             .ThenInclude(k => k.Schueler)
+            .Include(l => l.Faecher)
             .FirstOrDefaultAsync(l => l.Benutzername == benutzername);
     }
 }

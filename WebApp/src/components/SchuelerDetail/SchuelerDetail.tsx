@@ -49,9 +49,9 @@ export const SchuelerDetail = ({
       <div className={styles.header}>
         <div className={styles.profileSection}>
           <div className={styles.avatar}>
-            {schueler.bildUrl ? (
+            {schueler.bildByteArray ? (
               <img
-                src={schueler.bildUrl}
+                src={`data:image/jpeg;base64,${schueler.bildByteArray}`}
                 alt=""
                 className={styles.avatarImage}
               />
