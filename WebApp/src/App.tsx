@@ -60,7 +60,14 @@ const LoginRoute = () => {
   const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
 
-  if (isLoading) {
+  // Nur beim initialen Laden den Spinner zeigen (Token-Check)
+  // Während eines Login-Versuchs zeigen wir weiterhin das Login-Formular
+  const isInitialLoading = isLoading && !isAuthenticated;
+  
+  // Prüfen ob wir bereits auf der Login-Seite sind (um Remount zu vermeiden)
+  const isOnLoginPage = location.pathname === '/login';
+
+  if (isInitialLoading && !isOnLoginPage) {
     return (
       <div className="app-loading">
         <div className="spinner" />

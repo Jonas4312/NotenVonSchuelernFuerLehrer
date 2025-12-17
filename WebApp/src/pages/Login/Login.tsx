@@ -24,12 +24,16 @@ export const Login = () => {
       return;
     }
 
-    const success = await login({ benutzername, passwort });
-    if (success) {
-      // Nach erfolgreichem Login zur ursprünglichen Seite navigieren
-      navigate(from, { replace: true });
-    } else {
-      setError('Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Eingaben.');
+    try {
+      const success = await login({ benutzername, passwort });
+      if (success) {
+        // Nach erfolgreichem Login zur ursprünglichen Seite navigieren
+        navigate(from, { replace: true });
+      } else {
+        setError('Ungültiger Benutzername oder Passwort.');
+      }
+    } catch {
+      setError('Anmeldung fehlgeschlagen. Bitte versuchen Sie es später erneut.');
     }
   };
 
