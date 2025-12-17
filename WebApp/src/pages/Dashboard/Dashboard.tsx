@@ -432,6 +432,7 @@ export const Dashboard = () => {
                 selectedSchueler={selectedSchueler}
                 onSelect={handleSchuelerSelect}
                 isLoading={isLoadingSchueler}
+                selectedFachId={selectedFach?.id}
               />
             )}
           </aside>

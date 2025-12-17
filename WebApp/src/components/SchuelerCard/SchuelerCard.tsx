@@ -7,10 +7,15 @@ interface SchuelerCardProps {
   schueler: Schueler;
   isSelected: boolean;
   onClick: () => void;
+  selectedFachId?: string;
 }
 
-export const SchuelerCard = ({ schueler, isSelected, onClick }: SchuelerCardProps) => {
-  const noten = schueler.noten || [];
+export const SchuelerCard = ({ schueler, isSelected, onClick, selectedFachId }: SchuelerCardProps) => {
+  const alleNoten = schueler.noten || [];
+  // Wenn ein Fach ausgewählt ist, nur Noten dieses Fachs für den Durchschnitt verwenden
+  const noten = selectedFachId 
+    ? alleNoten.filter(n => n.fachId === selectedFachId || n.fach?.id === selectedFachId)
+    : alleNoten;
   const durchschnitt = calculateAverage(noten);
   const notenAnzahl = noten.length;
   const vollstaendigerName = `${schueler.vorname} ${schueler.nachname}`;

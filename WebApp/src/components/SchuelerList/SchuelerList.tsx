@@ -9,6 +9,7 @@ interface SchuelerListProps {
   selectedSchueler: Schueler | null;
   onSelect: (schueler: Schueler) => void;
   isLoading?: boolean;
+  selectedFachId?: string;
 }
 
 export const SchuelerList = ({
@@ -16,6 +17,7 @@ export const SchuelerList = ({
   selectedSchueler,
   onSelect,
   isLoading = false,
+  selectedFachId,
 }: SchuelerListProps) => {
   const [suchbegriff, setSuchbegriff] = useState('');
 
@@ -74,6 +76,7 @@ export const SchuelerList = ({
                 schueler={s}
                 isSelected={selectedSchueler?.id === s.id}
                 onClick={() => onSelect(s)}
+                selectedFachId={selectedFachId}
               />
             </li>
           ))}
