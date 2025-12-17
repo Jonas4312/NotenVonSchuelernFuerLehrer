@@ -27,7 +27,7 @@ export const Header = ({
   // Aktuelle Seite aus URL ableiten
   const currentPage: PageType = 
     location.pathname === '/admin' ? 'admin' :
-    location.pathname === '/einstellungen' ? 'settings' : 
+    location.pathname === '/user' ? 'settings' : 
     'dashboard';
 
   // Schließe Menü bei Klick außerhalb
@@ -55,7 +55,7 @@ export const Header = ({
         navigate('/admin');
         break;
       case 'settings':
-        navigate('/einstellungen');
+        navigate('/user');
         break;
     }
   };

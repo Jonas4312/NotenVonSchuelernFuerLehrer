@@ -34,7 +34,7 @@ const AuthenticatedLayout = ({ page }: { page: PageType }) => {
   // Aktuelle Seite aus URL ableiten
   const getCurrentPage = (): PageType => {
     if (location.pathname === '/admin') return 'admin';
-    if (location.pathname === '/einstellungen') return 'settings';
+    if (location.pathname === '/user') return 'settings';
     return 'dashboard';
   };
 
@@ -108,7 +108,7 @@ function App() {
             }
           />
           <Route
-            path="/einstellungen"
+            path="/user"
             element={
               <ProtectedRoute>
                 <AuthenticatedLayout page="settings" />
