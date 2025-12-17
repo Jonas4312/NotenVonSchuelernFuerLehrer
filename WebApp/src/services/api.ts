@@ -47,6 +47,14 @@ apiClient.interceptors.response.use(
         window.location.href = '/login';
       }
     }
+    
+    // ValidationErrors aus der API-Antwort extrahieren und als custom Error werfen
+    if (error.response?.data?.validationErrors) {
+      const validationError = new Error('Validation Error') as Error & { validationErrors: string[] };
+      validationError.validationErrors = error.response.data.validationErrors;
+      return Promise.reject(validationError);
+    }
+    
     return Promise.reject(error);
   }
 );

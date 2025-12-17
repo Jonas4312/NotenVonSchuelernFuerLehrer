@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using NotenVonSchuelernFuerLehrer.Domain.Model;
 using NotenVonSchuelernFuerLehrer.WebApi.Dtos;
+using NotenVonSchuelernFuerLehrer.WebApi.Exceptions;
 using NotenVonSchuelernFuerLehrer.WebApi.Services;
 
 namespace NotenVonSchuelernFuerLehrer.WebApi.RequestHandlers;
@@ -17,6 +19,14 @@ public class ErstelleLehrerRequestHandler : BaseRequestHandler<ErstelleLehrerReq
 
     protected override async Task<ErstelleLehrerResponse> HandleAsync(ErstelleLehrerRequest request)
     {
+        var benutzernameExistiert = await _context.Lehrer
+            .AnyAsync(l => l.Benutzername == request.Benutzername);
+        
+        if (benutzernameExistiert)
+        {
+            throw new ValidationException("Der Benutzername ist bereits vergeben.");
+        }
+        
         var lehrer = new Lehrer
         {
             Id = Guid.NewGuid(),

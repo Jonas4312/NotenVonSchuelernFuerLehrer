@@ -46,7 +46,7 @@ export const LehrerTab = () => {
     setIsModalOpen(true);
   };
 
-  const handleSave = async (vorname: string, nachname: string, benutzername: string, passwort: string, faecherIds: string[], klassenIds: string[]) => {
+  const handleSave = async (vorname: string, nachname: string, benutzername: string, passwort: string, faecherIds: string[], klassenIds: string[]): Promise<string | null> => {
     try {
       // Neuen Lehrer erstellen
       const newLehrer = await lehrerApi.create({
@@ -69,10 +69,16 @@ export const LehrerTab = () => {
       
       // Daten neu laden
       await loadData();
-    } catch (error) {
+      setIsModalOpen(false);
+      return null;
+    } catch (error: unknown) {
       console.error('Fehler beim Erstellen:', error);
+      if (error && typeof error === 'object' && 'validationErrors' in error) {
+        const validationError = error as { validationErrors: string[] };
+        return validationError.validationErrors.join(', ');
+      }
+      return 'Ein unbekannter Fehler ist aufgetreten.';
     }
-    setIsModalOpen(false);
   };
 
   if (isLoading) {
@@ -210,7 +216,7 @@ export const LehrerTab = () => {
 interface LehrerModalProps {
   alleFaecher: Fach[];
   alleKlassen: KlasseDto[];
-  onSave: (vorname: string, nachname: string, benutzername: string, passwort: string, faecherIds: string[], klassenIds: string[]) => void;
+  onSave: (vorname: string, nachname: string, benutzername: string, passwort: string, faecherIds: string[], klassenIds: string[]) => Promise<string | null>;
   onClose: () => void;
 }
 
@@ -248,7 +254,7 @@ const LehrerModal = ({ alleFaecher, alleKlassen, onSave, onClose }: LehrerModalP
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -272,7 +278,10 @@ const LehrerModal = ({ alleFaecher, alleKlassen, onSave, onClose }: LehrerModalP
       return;
     }
 
-    onSave(vorname.trim(), nachname.trim(), benutzername.trim(), passwort, Array.from(selectedFaecher), Array.from(selectedKlassen));
+    const result = await onSave(vorname.trim(), nachname.trim(), benutzername.trim(), passwort, Array.from(selectedFaecher), Array.from(selectedKlassen));
+    if (result) {
+      setError(result);
+    }
   };
 
   const isValid = vorname.trim() && nachname.trim() && benutzername.trim() && passwort && passwort === passwortWiederholen;

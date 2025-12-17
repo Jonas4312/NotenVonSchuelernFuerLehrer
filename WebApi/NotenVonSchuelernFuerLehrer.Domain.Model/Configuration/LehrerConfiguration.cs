@@ -13,6 +13,7 @@ public class LehrerConfiguration : IEntityTypeConfiguration<Lehrer>
         builder.Property(l => l.Vorname).IsRequired().HasMaxLength(255);
         builder.Property(l => l.Nachname).IsRequired().HasMaxLength(255);
         builder.Property(l => l.Benutzername).IsRequired().HasMaxLength(255);
+        builder.HasIndex(l => l.Benutzername).IsUnique().HasDatabaseName("IX_Lehrer_Benutzername");
         builder.Property(l => l.PasswortHash).IsRequired().HasMaxLength(255);
         builder.Property(l => l.BildByteArray).IsRequired();
         

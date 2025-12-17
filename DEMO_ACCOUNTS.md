@@ -12,7 +12,7 @@ docker compose up -d
 # oder explizit:
 SEED_MODE=full docker compose up -d
 ```
-Erstellt 5 Lehrer, 3 Klassen, 89 Schüler und Noten.
+Erstellt 6 Lehrer, 3 Klassen, 89 Schüler und Noten.
 
 ### Minimal-Modus
 ```bash
@@ -41,6 +41,7 @@ Erstellt nur einen Admin-Lehrer ohne Klassen, Fächer oder Schüler.
 | `sweber` | Sabine Weber | Deutsch, Englisch | 9A | Nur eine Klasse |
 | `kfischer` | Klaus Fischer | *(keine)* | *(keine)* | Kann nur Noten einsehen (Read-Only) |
 | `phofmann` | Petra Hofmann | Englisch | 10A | Nur ein Fach in einer Klasse |
+| `hbecker` | Hans Becker | *(keine)* | 10A | Klassenlehrer ohne Unterrichtsfach |
 
 ---
 
@@ -86,6 +87,16 @@ Erstellt nur einen Admin-Lehrer ohne Klassen, Fächer oder Schüler.
   - ✅ Kann nur Englisch-Noten für Schüler in 10A eintragen
   - ❌ Sieht nur die Klasse 10A
   - ❌ Kann keine Mathe- oder Deutsch-Noten eintragen
+
+### Hans Becker (`hbecker`)
+- **Fächer:** *(keine zugeordnet)*
+- **Klassen:** 10A
+- **Berechtigungen:** Klassenlehrer (nur Ansicht)
+  - ⚠️ Sieht Warnung "Lesezugriff" im Dashboard
+  - ✅ Kann alle Schüler der Klasse 10A sehen
+  - ✅ Kann alle Noten einsehen (alle Fächer)
+  - ❌ Kann keine Noten eintragen oder bearbeiten
+  - 💡 Typischer Anwendungsfall: Klassenlehrer für Beratungsgespräche
 
 ---
 

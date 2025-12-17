@@ -1,6 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using NotenVonSchuelernFuerLehrer.Domain.Service.Repositories;
 using NotenVonSchuelernFuerLehrer.Domain.Model;
 using NotenVonSchuelernFuerLehrer.WebApi.Dtos;
+using NotenVonSchuelernFuerLehrer.WebApi.Exceptions;
 using NotenVonSchuelernFuerLehrer.WebApi.Services;
 
 namespace NotenVonSchuelernFuerLehrer.WebApi.RequestHandlers;
@@ -21,6 +23,18 @@ public class AenderLehrerRequestHandler : BaseRequestHandler<AenderLehrerRequest
     protected override async Task<AenderLehrerResponse> HandleAsync(AenderLehrerRequest request)
     {
         var lehrer = await _lehrerRepository.LadeLehrerAsync(request.LehrerId);
+        
+        // Prüfen ob der neue Benutzername bereits von einem anderen Lehrer verwendet wird
+        if (lehrer.Benutzername != request.Benutzername)
+        {
+            var benutzernameExistiert = await _context.Lehrer
+                .AnyAsync(l => l.Benutzername == request.Benutzername && l.Id != request.LehrerId);
+            
+            if (benutzernameExistiert)
+            {
+                throw new ValidationException("Der Benutzername ist bereits vergeben.");
+            }
+        }
         
         lehrer.Vorname = request.Vorname;
         lehrer.Nachname = request.Nachname;

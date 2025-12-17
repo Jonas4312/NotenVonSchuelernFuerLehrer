@@ -2,7 +2,12 @@ namespace NotenVonSchuelernFuerLehrer.WebApi.Exceptions;
 
 public class ValidationException : Exception
 {
-    public ValidationException(params List<string> validationErrors)
+    public ValidationException(params string[] validationErrors)
+    {
+        ValidationErrors = validationErrors.ToList();
+    }
+    
+    public ValidationException(List<string> validationErrors)
     {
         ValidationErrors = validationErrors;
     }

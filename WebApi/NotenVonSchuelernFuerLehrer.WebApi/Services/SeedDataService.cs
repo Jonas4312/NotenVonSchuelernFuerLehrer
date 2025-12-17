@@ -79,12 +79,17 @@ public class SeedDataService
         
         // Lehrer 4: Klaus Fischer - neu eingestellt, hat noch keine Klassen zugeordnet
         var klausFischerLehrer = AddOrCreateLehrer("Klaus", "Fischer", "kfischer", "Passwort123", await DownloadImageAsByteArrayAsync());
-        // Keine Klassen zugeordnet - sieht keine Schüler
+        // Keine Klassen und keine Fächer zugeordnet - sieht keine Schüler
         
         // Lehrer 5: Petra Hofmann - unterrichtet nur Englisch in 10A
         var petraHofmannLehrer = AddOrCreateLehrer("Petra", "Hofmann", "phofmann", "Passwort123", await DownloadImageAsByteArrayAsync());
         AddOrCreateFachZuLehrer(englischFach, petraHofmannLehrer);
         AddOrCreateKlasseZuLehrer(klasse10A, petraHofmannLehrer);
+        
+        // Lehrer 6: Hans Becker - Klassenlehrer 10A, hat kein Unterrichtsfach (nur Verwaltung/Beratung)
+        var hansBeckerLehrer = AddOrCreateLehrer("Hans", "Becker", "hbecker", "Passwort123", await DownloadImageAsByteArrayAsync());
+        // Keine Fächer zugeordnet - kann keine Noten vergeben
+        AddOrCreateKlasseZuLehrer(klasse10A, hansBeckerLehrer);
 
         // 35 Schüler für Klasse 10A
         var schuelerNamen10A = new[]
