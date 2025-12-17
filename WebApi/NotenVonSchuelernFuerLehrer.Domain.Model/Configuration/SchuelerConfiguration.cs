@@ -15,6 +15,8 @@ public class SchuelerConfiguration : IEntityTypeConfiguration<Schueler>
         builder.Property(s => s.Nachname).IsRequired().HasMaxLength(255);
         builder.Property(s => s.BildByteArray).IsRequired();
         
+        builder.HasQueryFilter(s => !s.IsDeleted);
+        
         builder.HasOne(s => s.Klasse)
             .WithMany(k => k.Schueler)
             .HasForeignKey(s => s.KlasseId)

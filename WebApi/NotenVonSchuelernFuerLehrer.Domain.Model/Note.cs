@@ -9,6 +9,7 @@ public class Note
     public string? Notiz { get; set; }
     public required DateTime ErstelltAm { get; init; }
     public required DateTime AngepasstAm { get; set; }
+    public bool IsDeleted { get; set; }
     
     public required Schueler Schueler { get; init; }
     public required Fach Fach { get; init; }

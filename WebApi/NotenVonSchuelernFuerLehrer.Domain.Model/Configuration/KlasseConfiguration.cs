@@ -13,6 +13,8 @@ public class KlasseConfiguration : IEntityTypeConfiguration<Klasse>
         builder.Property(k => k.Bezeichnung).IsRequired().HasMaxLength(255);
         builder.Property(k => k.Kurzbezeichnung).IsRequired().HasMaxLength(255);
         
+        builder.HasQueryFilter(k => !k.IsDeleted);
+        
         builder
             .HasMany(k => k.Lehrer)
             .WithMany(l => l.Klassen)

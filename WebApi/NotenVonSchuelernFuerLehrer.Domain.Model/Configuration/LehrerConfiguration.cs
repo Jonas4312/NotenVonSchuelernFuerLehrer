@@ -17,6 +17,8 @@ public class LehrerConfiguration : IEntityTypeConfiguration<Lehrer>
         builder.Property(l => l.PasswortHash).IsRequired().HasMaxLength(255);
         builder.Property(l => l.BildByteArray).IsRequired();
         
+        builder.HasQueryFilter(l => !l.IsDeleted);
+        
         builder
             .HasMany(l => l.Faecher)
             .WithMany(f => f.Lehrer)

@@ -18,7 +18,7 @@ public class LoescheFachRequestHandler : BaseRequestHandler<LoescheFachRequest, 
     {
         var fach = await _fachRepository.LadeFachAsync(request.FachId);
         
-        _context.Fach.Remove(fach);
+        fach.IsDeleted = true;
         await _context.SaveChangesAsync();
 
         return new LoescheFachResponse();

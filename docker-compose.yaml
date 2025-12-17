@@ -54,7 +54,7 @@ services:
       - webapi
       - webapp
     environment:
-      # Passwort für das Zertifikat (Standard: changeit)
+    # Passwort für das Zertifikat (Standard: changeit)
       Kestrel__Certificates__Default__Password: "${CERT_PASSWORD:-changeit}"
     # Für externes Zertifikat: auskommentieren und cert.pfx in ./Proxy/certs/ ablegen
     # volumes:

@@ -18,7 +18,7 @@ public class LoescheLehrerRequestHandler : BaseRequestHandler<LoescheLehrerReque
     {
         var lehrer = await _lehrerRepository.LadeLehrerAsync(request.LehrerId);
         
-        _context.Lehrer.Remove(lehrer);
+        lehrer.IsDeleted = true;
         await _context.SaveChangesAsync();
 
         return new LoescheLehrerResponse();

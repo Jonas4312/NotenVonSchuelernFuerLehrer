@@ -18,7 +18,7 @@ public class LoescheKlasseRequestHandler : BaseRequestHandler<LoescheKlasseReque
     {
         var klasse = await _klasseRepository.LadeKlasseAsync(request.KlasseId);
         
-        _context.Klasse.Remove(klasse);
+        klasse.IsDeleted = true;
         await _context.SaveChangesAsync();
 
         return new LoescheKlasseResponse();

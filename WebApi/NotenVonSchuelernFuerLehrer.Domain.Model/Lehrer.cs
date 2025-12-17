@@ -8,6 +8,7 @@ public class Lehrer
     public required string Benutzername { get; set; }
     public required string PasswortHash { get; set; }
     public required byte[] BildByteArray { get; set; }
+    public bool IsDeleted { get; set; }
     
     public required List<Fach> Faecher { get; init; } = [];
     public required List<Klasse> Klassen { get; init; } = [];

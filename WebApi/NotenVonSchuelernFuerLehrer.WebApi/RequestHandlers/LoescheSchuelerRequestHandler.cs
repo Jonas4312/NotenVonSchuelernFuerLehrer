@@ -27,7 +27,7 @@ public class LoescheSchuelerRequestHandler : BaseRequestHandler<LoescheSchuelerR
         
         lehrer.DarfKlasseVerwalten(schueler.KlasseId);
         
-         _context.Schueler.Remove(schueler);
+        schueler.IsDeleted = true;
         await _context.SaveChangesAsync();
         
         return new LoescheSchuelerResponse();

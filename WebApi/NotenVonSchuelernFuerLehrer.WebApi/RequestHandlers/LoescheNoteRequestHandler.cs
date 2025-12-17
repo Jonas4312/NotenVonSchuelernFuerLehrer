@@ -28,7 +28,7 @@ public class LoescheNoteRequestHandler : BaseRequestHandler<LoescheNoteRequest, 
         lehrer.DarfFachVerwalten(note.FachId);
         lehrer.DarfKlasseVerwalten(note.Schueler.KlasseId);
         
-        _context.Note.Remove(note);
+        note.IsDeleted = true;
         await _context.SaveChangesAsync();
         
         return new LoescheNoteResponse();

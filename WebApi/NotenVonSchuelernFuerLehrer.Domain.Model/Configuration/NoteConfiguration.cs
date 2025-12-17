@@ -17,6 +17,8 @@ public class NoteConfiguration : IEntityTypeConfiguration<Note>
         builder.Property(n => n.ErstelltAm).IsRequired();
         builder.Property(n => n.AngepasstAm).IsRequired();
         
+        builder.HasQueryFilter(n => !n.IsDeleted);
+        
         builder.HasOne(n => n.Schueler)
             .WithMany(s => s.Noten)
             .HasForeignKey(n => n.SchuelerId)
