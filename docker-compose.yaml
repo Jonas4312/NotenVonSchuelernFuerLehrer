@@ -8,9 +8,9 @@ services:
       MYSQL_ROOT_PASSWORD: Test
     volumes:
       - mysql:/var/lib/mysql
-    ports:
-      - "3306:3306"
-      - "33060:33060"
+    # ports:
+    #   - "3306:3306"
+    #   - "33060:33060"
 
   webapi:
     build:
@@ -29,9 +29,9 @@ services:
       ShouldSeedDatabase: "true"
       # Seed-Modus: "full" = alle Demo-Daten, "minimal" = nur ein Admin-Lehrer
       SeedMode: "${SEED_MODE:-full}"
-    ports:
-      - "8080:8080"
-      - "8081:8081"
+    # ports:
+    #   - "8080:8080"
+    #   - "8081:8081"
 
   webapp:
     build:
@@ -40,8 +40,8 @@ services:
     container_name: WebApp
     depends_on:
       - webapi
-    ports:
-      - "3000:80"
+    # ports:
+    #   - "3000:80"
     
   yarp:
     build:
