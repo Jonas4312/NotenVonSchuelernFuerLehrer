@@ -8,15 +8,45 @@ public class SeedDataService
     private readonly NotenVonSchuelernFuerLehrerDbContext _context;
     private readonly HashService _hashService;
     private readonly HttpClient _httpClient;
+    private readonly IConfiguration _configuration;
     
-    public SeedDataService(NotenVonSchuelernFuerLehrerDbContext context, HashService hashService, HttpClient httpClient)
+    public SeedDataService(NotenVonSchuelernFuerLehrerDbContext context, HashService hashService, HttpClient httpClient, IConfiguration configuration)
     {
         _context = context;
         _hashService = hashService;
         _httpClient = httpClient;
+        _configuration = configuration;
     }
 
     public async Task SeedAsync()
+    {
+        var seedMode = _configuration["SeedMode"]?.ToLowerInvariant() ?? "full";
+        
+        if (seedMode == "minimal")
+        {
+            await SeedMinimalAsync();
+        }
+        else
+        {
+            await SeedFullAsync();
+        }
+    }
+
+    /// <summary>
+    /// Minimal-Seeding: Nur ein Admin-Lehrer, keine Klassen, Fächer oder Schüler
+    /// </summary>
+    private async Task SeedMinimalAsync()
+    {
+        // Nur einen Admin-Lehrer erstellen
+        AddOrCreateLehrer("Admin", "Lehrer", "admin", "Admin123!", await DownloadImageAsByteArrayAsync());
+        
+        await _context.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Full-Seeding: Alle Demo-Daten (5 Lehrer, 3 Klassen, 89 Schüler, Noten)
+    /// </summary>
+    private async Task SeedFullAsync()
     {
         var matheFach = AddOrCreateFach("Mathematik", "MA");
         var deutschFach = AddOrCreateFach("Deutsch", "DE");

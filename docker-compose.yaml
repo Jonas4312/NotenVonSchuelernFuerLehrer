@@ -27,6 +27,8 @@ services:
       Jwt__Key: "TeIvOVCK01UzOVQw6cBLR3IL1R9D5sBC8O04PbCi5ZE3h8cGoU"
       ShouldMigrateDatabase: "true"
       ShouldSeedDatabase: "true"
+      # Seed-Modus: "full" = alle Demo-Daten, "minimal" = nur ein Admin-Lehrer
+      SeedMode: "${SEED_MODE:-full}"
     ports:
       - "8080:8080"
       - "8081:8081"

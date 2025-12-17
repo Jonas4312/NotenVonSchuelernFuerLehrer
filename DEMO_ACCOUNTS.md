@@ -2,6 +2,32 @@
 
 Diese Accounts werden beim Start der Anwendung automatisch erstellt (Seeding).
 
+## Seed-Modi
+
+Die Anwendung unterstützt zwei Seed-Modi, die über die Umgebungsvariable `SEED_MODE` gesteuert werden:
+
+### Full-Modus (Standard)
+```bash
+docker compose up -d
+# oder explizit:
+SEED_MODE=full docker compose up -d
+```
+Erstellt 5 Lehrer, 3 Klassen, 89 Schüler und Noten.
+
+### Minimal-Modus
+```bash
+SEED_MODE=minimal docker compose up -d
+```
+Erstellt nur einen Admin-Lehrer ohne Klassen, Fächer oder Schüler.
+
+| Benutzername | Passwort | Beschreibung |
+|--------------|----------|--------------|
+| `admin` | `Admin123!` | Leerer Account zum Aufbau eigener Daten |
+
+---
+
+## Full-Modus: Alle Demo-Accounts
+
 **Allgemeines Passwort für alle Demo-Accounts:** `Passwort123`
 
 ---
